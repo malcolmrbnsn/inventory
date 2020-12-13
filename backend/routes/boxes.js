@@ -3,22 +3,22 @@ const express = require("express"),
   db = require("../models")
 
 // Base route: /api/boxes
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     const boxes = await db.Box.find()
     res.send({
       boxes
     })
   } catch (error) {
-    console.log(error)
+    next(error)
   }
 })
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
 
   } catch (error) {
-    console.log(error)
+    next(error)
   }
 })
 

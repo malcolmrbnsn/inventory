@@ -3,18 +3,18 @@ const express = require("express"),
   db = require("../models")
 
 // Base route: /api/sellers
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     const sellers = await db.Seller.find()
     res.send({
       sellers
     })
   } catch (error) {
-    console.log(error)
+    next(error)
   }
 })
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
     const data = req.body;
     seller = new db.Seller({
@@ -25,8 +25,7 @@ router.post("/", async (req, res) => {
     await seller.save();
     res.send(seller)
   } catch (error) {
-    console.log(error)
-    res.send("An error occured")
+    next(error)
   }
 })
 
