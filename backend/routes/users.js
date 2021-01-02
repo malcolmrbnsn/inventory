@@ -3,26 +3,53 @@ const express = require('express'),
   db = require("../models");
 
 router.get("/", async (req, res, next) => {
-  // res.send("will show signed in user")
-  // users = await db.User.find()
-  // res.send(users)
-});
-
-router.post("/signup", async (req, res, next) => {
   try {
-    console.log(req.body)
-    let user = new db.User({
+    res.send("")
 
-    })
-    user.save()
-    res.send(user)
-    
   } catch (error) {
-    next(error);
-
+    next(error)
   }
-
 });
 
+router.post("/", async (req, res, next) => {
+  try {
+    if (req.body.signupCode === process.env.SIGNUP_CODE) {
+      let {email, password} = req.body
+      let user = await db.User.create({
+        email,
+        password
+      })
+
+      // update session to log user in
+      req.session.loggedIn = true
+
+      return res.send({
+        user
+      })
+    } else {
+      return next({
+        status: 400,
+        message: "Signup code is incorrect"
+      });
+    }
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post("/login", async (req, res, next) => {
+  try {
+    
+  let {email, password} = req.body
+  let user = await db.User.findOne({
+    email,
+    password
+  });
+
+  return res.send({user})
+  } catch (error) {
+    return next(error);
+  }
+})
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const UserSchema = new mongoose.Schema({
   password: {
@@ -11,6 +11,5 @@ const UserSchema = new mongoose.Schema({
     required: true
   }
 });
-
 
 module.exports = mongoose.model("User", UserSchema);

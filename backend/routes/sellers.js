@@ -10,7 +10,7 @@ router.get("/", async (req, res, next) => {
       sellers
     })
   } catch (error) {
-    next(error)
+    next(error);
   }
 })
 
@@ -23,9 +23,40 @@ router.post("/", async (req, res, next) => {
       boxes: []
     })
     await seller.save();
-    res.send(seller)
+    res.status(201)
+    res.send(seller);
   } catch (error) {
     next(error)
+  }
+})
+
+// get user
+router.get("/:id", async (req, res, next) => {
+  try {
+    let seller = db.Seller.findOne(req.params.id)
+
+    return res.send({
+      seller
+    })
+  } catch (error) {
+    return next(error)
+  }
+})
+
+// update user
+router.post("/:id", async (req, res, next) => {
+})
+
+
+// delete user
+router.delete("/:id", async (req, res, next) => {
+  try {
+    db.Seller.deleteOne(req.params.id)
+    return res.send({
+      success: true
+    })
+  } catch (error) {
+    return next(error) 
   }
 })
 

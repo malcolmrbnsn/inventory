@@ -6,7 +6,20 @@ const BoxSchema = new mongoose.Schema({
   boxType: String,
   seller: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Seller"
+    ref: "Seller",
+    required: true
+  }
+});
+
+BoxSchema.pre("remove", async function(next) {
+  try {
+    const seller = await db.Seller.findById(this.seller.id);
+    await seller.alarms.remove(this._id);
+    await seller.save();
+
+    return next();
+  } catch (err) {
+    return next(err);
   }
 });
 
