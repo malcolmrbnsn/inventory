@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const box = require("./box");
 
 const SellerSchema = new mongoose.Schema({
   name: {
@@ -19,16 +20,11 @@ const SellerSchema = new mongoose.Schema({
   ]
 });
 
-sellerSchema.pre("remove", function(next) {
+SellerSchema.pre("remove", function(next) {
   try {
-    if (this.hosts) {
-      this.hosts.forEach(host => {
-        Host.findByIdAndRemove(host._id);
-      });
-    }
-    if (this.alarms) {
-      this.alarms.forEach(alarm => {
-        Alarm.findByIdAndRemove(alarm);
+    if (this.boxes) {
+      this.boxes.forEach(box => {
+        Box.findByIdAndRemove(box);
       });
     }
 

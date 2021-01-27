@@ -11,7 +11,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/signup", async (req, res, next) => {
   try {
     if (req.body.signupCode === process.env.SIGNUP_CODE) {
       let {email, password} = req.body
@@ -23,9 +23,8 @@ router.post("/", async (req, res, next) => {
       // update session to log user in
       req.session.loggedIn = true
 
-      return res.send({
-        user
-      })
+      return res.send(user)
+
     } else {
       return next({
         status: 400,
@@ -45,8 +44,8 @@ router.post("/login", async (req, res, next) => {
     email,
     password
   });
+  return res.send(user)
 
-  return res.send({user})
   } catch (error) {
     return next(error);
   }

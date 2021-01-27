@@ -6,9 +6,8 @@ const express = require("express"),
 router.get("/", async (req, res, next) => {
   try {
     const boxes = await db.Box.find()
-    return res.send({
-      boxes
-    })
+    return res.send(boxes)
+
   } catch (error) {
     return next(error)
   }
@@ -27,7 +26,7 @@ router.post("/", async (req, res, next) => {
     await seller.boxes.push(box)
     await seller.save()
 
-    return res.send(box);
+    return res.status(201).send(box);
 
   } catch (error) {
     next(error);
@@ -38,9 +37,7 @@ router.post("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     let box = db.Box.findOne(req.params.id)
-    return res.send({
-      box
-    })
+    return res.send(box)
     
   } catch (error) {
     return next(error)
@@ -51,6 +48,8 @@ router.get("/:id", async (req, res, next) => {
 router.post("/:id", async (req, res, next) => {
   // update the box and save it
   let box = db.Box.findById(req.params.id);
+
+  return res.send(box)
 })
 
 router.delete("/:id", async (req, res, next) => {

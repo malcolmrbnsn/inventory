@@ -6,9 +6,8 @@ const express = require("express"),
 router.get("/", async (req, res, next) => {
   try {
     const sellers = await db.Seller.find()
-    res.send({
-      sellers
-    })
+    return res.send(sellers)
+
   } catch (error) {
     next(error);
   }
@@ -23,8 +22,8 @@ router.post("/", async (req, res, next) => {
       boxes: []
     })
     await seller.save();
-    res.status(201)
-    res.send(seller);
+    return res.status(201).send(seller);
+
   } catch (error) {
     next(error)
   }
@@ -35,9 +34,7 @@ router.get("/:id", async (req, res, next) => {
   try {
     let seller = db.Seller.findOne(req.params.id)
 
-    return res.send({
-      seller
-    })
+    return res.status(200).send(seller)
   } catch (error) {
     return next(error)
   }

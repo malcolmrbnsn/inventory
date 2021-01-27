@@ -11,7 +11,7 @@ const BASE_URL='http://localhost:3001/api'
  */
 async function apiCall(method, url, body) {
     return new Promise((resolve, reject) => {
-        return axios[method](BASE_URL + path, body)
+        return axios[method](BASE_URL + url, body)
         .then(response => {
             return resolve(response.data)
         })
@@ -23,7 +23,7 @@ async function apiCall(method, url, body) {
 
 async function createUser() {
     try {
-        params = {
+        const params = {
             signupCode: "1234",
             email: "calum@google.com",
             password: "test"
@@ -34,6 +34,5 @@ async function createUser() {
         console.log(error)
     }
 }
-createUser()
 
-module.exports = request
+export default apiCall
