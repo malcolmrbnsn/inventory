@@ -1,6 +1,7 @@
 import React from 'react'
+import apiCall from '../api'
 
-class LoginForm extends React.Component {
+class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -8,6 +9,8 @@ class LoginForm extends React.Component {
             password: "",
             signupCode: ""
         }
+        this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     handleChange(e) {
@@ -17,6 +20,8 @@ class LoginForm extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         const authType = this.props.signUp ? "signup" : "login"
+        apiCall("post", "/users/" + authType, this.state)
+        .then(res => alert(res))
 
     }
 
@@ -28,8 +33,8 @@ class LoginForm extends React.Component {
                     <label>Email address:</label>
                     <input type="text" name="email" value={email} onChange={this.handleChange} />
                     <label>Password:</label>
-                    <input type="text" name="email" value={password} onChange={this.handleChange} />
-
+                    <input type="password" name="password" value={password} onChange={this.handleChange} />
+                    <button type="submit">goo</button>
                 </form>
 
             </div>
@@ -38,4 +43,4 @@ class LoginForm extends React.Component {
     }
 }
 
-export default LoginForm;
+export default Login;

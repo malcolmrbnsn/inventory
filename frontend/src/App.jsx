@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 
 import Navbar from './components/Navbar'
-import LoginForm from './components/LoginForm'
+import Login from './containers/Login'
 import SellerForm from './components/SellerForm'
 import Boxes from './containers/Boxes'
 import Sellers from './containers/Sellers'
@@ -17,7 +17,7 @@ function App() {
       <Router>
         <Navbar />
         <Switch>
-          <Route path='/login'/>
+          <Route path='/login' component={Login}/>
           <Route path='/boxes' component={Boxes} />
           <Route path='/sellers/new' component={SellerForm}/>
           <Route path='/sellers' component={Sellers}/>
