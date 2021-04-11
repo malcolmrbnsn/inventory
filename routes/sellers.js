@@ -6,7 +6,9 @@ const db = require('../models')
 router.get('/', async (req, res, next) => {
   try {
     const sellers = await db.Seller.find()
-    return res.send(sellers)
+    return res.render("sellers/index", {
+      sellers: sellers
+    })
   } catch (error) {
     next(error)
   }

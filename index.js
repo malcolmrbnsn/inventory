@@ -33,8 +33,11 @@ app.use(cookieSession({
 }))
 
 // Enable HTML templating
-app.engine('handlebars', exphbs())
-app.set('view engine', 'handlebars')
+app.engine('hbs', exphbs({
+  layoutsDir: __dirname + '/views/layouts',
+  extname: 'hbs'
+}));
+app.set('view engine', 'hbs')
 
 /**
  * Route Definitions
