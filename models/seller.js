@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const box = require("./box");
+const mongoose = require('mongoose')
+const Box = require('./box')
 
 const SellerSchema = new mongoose.Schema({
   name: {
@@ -15,23 +15,23 @@ const SellerSchema = new mongoose.Schema({
   boxes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Box"
+      ref: 'Box'
     }
   ]
-});
+})
 
-SellerSchema.pre("remove", function(next) {
+SellerSchema.pre('remove', function (next) {
   try {
     if (this.boxes) {
       this.boxes.forEach(box => {
-        Box.findByIdAndRemove(box);
-      });
+        Box.findByIdAndRemove(box)
+      })
     }
 
-    return next();
+    return next()
   } catch (err) {
-    return next(err);
+    return next(err)
   }
-});
+})
 
-module.exports = mongoose.model("Seller", SellerSchema);
+module.exports = mongoose.model('Seller', SellerSchema)

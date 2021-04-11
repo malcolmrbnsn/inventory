@@ -1,21 +1,21 @@
-const express = require('express'),
-  router = express.Router(),
-  db = require("../models");
+const express = require('express')
+const router = express.Router()
+const db = require('../models')
 
 /**
  * /signup routes
  * GET: renders the form
  * POST: signs up the user
  */
-router.get("/signup", async (req, res) => {
-  res.render("users/signup")
+router.get('/signup', async (req, res) => {
+  res.render('users/signup')
 })
 
-router.post("/signup", async (req, res, next) => {
+router.post('/signup', async (req, res, next) => {
   try {
     if (req.body.signupCode === process.env.SIGNUP_CODE) {
-      let { email, password } = req.body
-      let user = await db.User.create({
+      const { email, password } = req.body
+      const user = await db.User.create({
         email,
         password
       })
@@ -24,40 +24,37 @@ router.post("/signup", async (req, res, next) => {
       req.session.loggedIn = true
 
       return res.send(user)
-
     } else {
       return next({
         status: 400,
-        message: "Signup code is incorrect"
-      });
+        message: 'Signup code is incorrect'
+      })
     }
   } catch (error) {
-    return next(error);
+    return next(error)
   }
-});
-
+})
 
 /**
  * /login routes
  * GET: renders the form
  * POST: logs in the user
  */
-router.get("/login", async (req, res) => {
-  res.render("users/login")
+router.get('/login', async (req, res) => {
+  res.render('users/login')
 })
 
-router.post("/login", async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
   try {
-    let { email, password } = req.body
-    let user = await db.User.findOne({
+    const { email, password } = req.body
+    const user = await db.User.findOne({
       email,
       password
-    });
+    })
     return res.send(user)
-
   } catch (error) {
-    return next(error);
+    return next(error)
   }
 })
 
-module.exports = router;
+module.exports = router
