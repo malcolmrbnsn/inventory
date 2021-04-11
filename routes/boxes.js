@@ -6,7 +6,7 @@ const db = require('../models')
 router.get('/', async (req, res, next) => {
   try {
     const boxes = await db.Box.find()
-    return res.send(boxes)
+    return res.render("boxes/index", {boxes, session: req.session})
   } catch (error) {
     return next(error)
   }
