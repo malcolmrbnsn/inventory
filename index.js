@@ -2,11 +2,12 @@
  * Required External Modules
  */
 const express = require("express"),
-  app = express(), // Initialise the server instance
+  app = express(), // Initialise the server 
+  exphbs  = require('express-handlebars'),
   helmet = require("helmet"),
   bodyParser = require('body-parser'),
-  cors = require("cors"),
-  cookieSession = require("cookie-session");
+  cookieSession = require("cookie-session"),
+  morgan = require("morgan");
 require("dotenv").config()
 
 /**
@@ -19,12 +20,11 @@ const PORT = process.env.PORT || 3000,
  *  App Configuration
  */
 
-const morgan = require("morgan");
-app.use(morgan("dev")); // Logs web activity to the console
+// Log web access to console
+app.use(morgan('short'));
 
 app.use(bodyParser.json()); // Parses any JSON requests for us to use
-app.use(helmet()); // Blocks any insecure HTTP headers
-app.use(cors()); // Allows cross origin requests, we need this as the frontend is hosted on a different server
+app.use(helmet()); // Blocks any insecure HTTP/HTTPS headers
 
 // Cookie session setup
 app.use(cookieSession({
@@ -32,16 +32,22 @@ app.use(cookieSession({
   secret: process.env.COOKIE_SECRET
 }))
 
+// Enable HTML templating
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
+
 /**
  * Route Definitions
  */
+const homeRoutes = require("./routes/home")
 const boxesRoutes = require("./routes/boxes");
 const sellersRoutes = require("./routes/sellers");
 const userRoutes = require("./routes/users");
 
-app.use('/api/boxes', boxesRoutes);
-app.use('/api/sellers', sellersRoutes);
-app.use("/api/users", userRoutes);
+app.use('/', homeRoutes);
+app.use("/", userRoutes);
+app.use('/boxes', boxesRoutes);
+app.use('/sellers', sellersRoutes);
 
 // Error handler route
 const errorHandler = require("./helpers/error")

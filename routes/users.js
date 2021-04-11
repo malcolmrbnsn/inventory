@@ -2,19 +2,19 @@ const express = require('express'),
   router = express.Router(),
   db = require("../models");
 
-router.get("/", async (req, res, next) => {
-  try {
-    res.send("")
-
-  } catch (error) {
-    next(error)
-  }
-});
+/**
+ * /signup routes
+ * GET: renders the form
+ * POST: signs up the user
+ */
+router.get("/signup", async (req, res) => {
+  res.render("users/signup")
+})
 
 router.post("/signup", async (req, res, next) => {
   try {
     if (req.body.signupCode === process.env.SIGNUP_CODE) {
-      let {email, password} = req.body
+      let { email, password } = req.body
       let user = await db.User.create({
         email,
         password
@@ -36,15 +36,24 @@ router.post("/signup", async (req, res, next) => {
   }
 });
 
+
+/**
+ * /login routes
+ * GET: renders the form
+ * POST: logs in the user
+ */
+router.get("/login", async (req, res) => {
+  res.render("users/login")
+})
+
 router.post("/login", async (req, res, next) => {
   try {
-    
-  let {email, password} = req.body
-  let user = await db.User.findOne({
-    email,
-    password
-  });
-  return res.send(user)
+    let { email, password } = req.body
+    let user = await db.User.findOne({
+      email,
+      password
+    });
+    return res.send(user)
 
   } catch (error) {
     return next(error);
