@@ -29,7 +29,10 @@ app.use(helmet()) // Blocks any insecure HTTP/HTTPS headers
 // Cookie session setup
 app.use(cookieSession({
   name: 'session',
-  secret: process.env.COOKIE_SECRET
+  secret: process.env.COOKIE_SECRET,
+  sameSite: true,
+  
+
 }))
 
 // Enable HTML templating

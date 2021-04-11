@@ -9,7 +9,10 @@ const { body, validationResult } = require('express-validator');
  * POST: signs up the user
  */
 router.get('/signup', async (req, res) => {
-  res.render('users/signup')
+  res.render('users/signup',
+    {
+      session: req.session
+    })
 })
 
 router.post('/signup',
@@ -41,7 +44,8 @@ router.post('/signup',
     } catch (error) {
       console.log(error.array())
       return res.render('users/signup', {
-        errors: error.array()
+        errors: error.array(),
+        session: req.session
       })
     }
   })
@@ -52,7 +56,9 @@ router.post('/signup',
  * POST: logs in the user
  */
 router.get('/login', async (req, res) => {
-  res.render('users/login')
+  res.render('users/login', {
+    session: req.session
+  })
 })
 
 router.post('/login', async (req, res, next) => {
@@ -63,7 +69,7 @@ router.post('/login', async (req, res, next) => {
       password
     })
     if (!user) {
-      throw new Error('E-mail or password incorrect');
+      throw new Error('E-mail address or password incorrect');
     }
     req.session = {
       user,
@@ -73,9 +79,15 @@ router.post('/login', async (req, res, next) => {
   } catch (error) {
     console.log(error.message)
     return res.render('users/login', {
-      error: error.message
+      error: error.message,
+      session: req.session
     })
   }
+})
+
+router.get("/signout", (req, res) => {
+  req.session = { user: {}, loggedIn: false };
+  res.redirect("/")
 })
 
 module.exports = router

@@ -1,8 +1,12 @@
 <div class="ui secondary menu">
     <a class="item" href="/">Inventory</a>
-
-    <a class="item" href="/login">Login</a>
-    <a class="item" href="/signup">Sign Up</a>
     <a class="item" href="/boxes">Boxes</a>
     <a class="item" href="/sellers">Sellers</a>
+    {{#if session.loggedIn}}
+    <a href="" class="item">Signed in as name</a>
+    <a class="item" href="/signout">Sign Out</a>
+    {{else}}
+    <a class="item" href="/login">Login</a>
+    <a class="item" href="/signup">Sign Up</a>
+    {{/if}}
 </div>
