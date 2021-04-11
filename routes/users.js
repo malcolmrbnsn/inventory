@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../models')
+const { body, validationResult } = require('express-validator');
 
 /**
  * /signup routes
@@ -11,9 +12,20 @@ router.get('/signup', async (req, res) => {
   res.render('users/signup')
 })
 
-router.post('/signup', async (req, res, next) => {
-  try {
-    if (req.body.signupCode === process.env.SIGNUP_CODE) {
+router.post('/signup',
+  body('email').isEmail().custom(value => {
+    return db.User.findOne({ email: value }).then(user => {
+      if (user) {
+        return Promise.reject('E-mail already in use');
+      }
+    });
+  }),
+  body('password', 'Password needs to be at least 5 characters').isLength({ min: 5 }),
+  body('code', "Signup code is incorrect").equals(process.env.SIGNUP_CODE),
+  async (req, res, next) => {
+    try {
+      // throw an error if the form was not validated successfully
+      validationResult(req).throw();
       const { email, password } = req.body
       const user = await db.User.create({
         email,
@@ -21,19 +33,18 @@ router.post('/signup', async (req, res, next) => {
       })
 
       // update session to log user in
-      req.session.loggedIn = true
-
-      return res.send(user)
-    } else {
-      return next({
-        status: 400,
-        message: 'Signup code is incorrect'
+      req.session = {
+        user,
+        loggedIn: true
+      }
+      return res.redirect("/dashboard")
+    } catch (error) {
+      console.log(error.array())
+      return res.render('users/signup', {
+        errors: error.array()
       })
     }
-  } catch (error) {
-    return next(error)
-  }
-})
+  })
 
 /**
  * /login routes
@@ -51,9 +62,19 @@ router.post('/login', async (req, res, next) => {
       email,
       password
     })
-    return res.send(user)
+    if (!user) {
+      throw new Error('E-mail or password incorrect');
+    }
+    req.session = {
+      user,
+      loggedIn: true
+    }
+    return res.redirect("/dashboard")
   } catch (error) {
-    return next(error)
+    console.log(error.message)
+    return res.render('users/login', {
+      error: error.message
+    })
   }
 })
 

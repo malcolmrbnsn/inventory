@@ -1,14 +1,26 @@
 {{> nav}}
 <div class="ui container">
     <h1>Login</h1>
+    {{#if error}}
+    <div class="ui red message">
+        <ul>
+            <li>
+                {{error}}
+            </li>
+        </ul>
+    </div>
+    {{/if}}
     <form action="/login" method="POST" class="ui form">
         <div class="field">
-            <label>Email address:</label>
+            <label>Email address</label>
             <input type="email" name="email" />
         </div>
         <div class="field">
-            <label>Password:</label>
+            <label>Password</label>
             <input type="password" name="password" />
+        </div>
+        <div class="field">
+            <button class="ui button" type="submit">Login</button>
         </div>
     </form>
 </div>

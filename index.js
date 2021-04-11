@@ -23,7 +23,7 @@ const IP = process.env.IP || '127.0.0.1'
 // Log web access to console
 app.use(morgan('short'))
 
-app.use(bodyParser.json()) // Parses any JSON requests for us to use
+app.use(bodyParser.urlencoded({ extended: true })) // Parses form data from the browser
 app.use(helmet()) // Blocks any insecure HTTP/HTTPS headers
 
 // Cookie session setup
