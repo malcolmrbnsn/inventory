@@ -1,2 +1,18 @@
-{{> nav}}
 <h1>Sellers</h1>
+<a href="/sellers/new" class="ui button">new seller</a>
+
+<table class="ui celled table">
+    <thead>
+        <tr>Name</tr>
+        <tr>Email</tr>
+        <tr>Boxes out</tr>
+    </thead>
+    {{#each sellers as | seller |}}
+    <tbody>
+        <tr>{{seller.name}}</tr>
+        <tr>{{seller.boxes}}</tr>
+    </tbody>
+    {{/each}}
+
+</table>
+{{sellers}}

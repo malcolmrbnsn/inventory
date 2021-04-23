@@ -12,6 +12,11 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+// new box
+router.get("/new", async (req, res, next) => {
+  return res.render("boxes/new", {session: req.session})
+})
+
 // Create a new box
 router.post('/', async (req, res, next) => {
   try {

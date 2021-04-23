@@ -5,13 +5,19 @@ const db = require('../models')
 // Base route: /sellers
 router.get('/', async (req, res, next) => {
   try {
-    const sellers = await db.Seller.find()
+    const sellers = await db.Seller.find().lean()
     return res.render("sellers/index", {
-      sellers: sellers
+      sellers: sellers,
+      session: req.session
     })
   } catch (error) {
     next(error)
   }
+})
+
+// new seller
+router.get("/new", async (req, res, next) => {
+  return res.render("sellers/new", {session: req.session})
 })
 
 router.post('/', async (req, res, next) => {
