@@ -3,16 +3,19 @@
 
 <table class="ui celled table">
     <thead>
-        <tr>Name</tr>
-        <tr>Email</tr>
-        <tr>Boxes out</tr>
+        <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Boxes out</th>
+        </tr>
     </thead>
-    {{#each sellers as | seller |}}
     <tbody>
-        <tr>{{seller.name}}</tr>
-        <tr>{{seller.boxes}}</tr>
-    </tbody>
+    {{#each sellers}}
+    <tr>
+        <td>{{this.name}}</td>
+        <td>{{this.email}}</td>
+        <td>{{this.boxes}}</td>
+    </tr>
     {{/each}}
-
+    </tbody>
 </table>
-{{sellers}}

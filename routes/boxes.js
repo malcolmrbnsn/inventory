@@ -5,7 +5,7 @@ const db = require('../models')
 // Base route: /api/boxes
 router.get('/', async (req, res, next) => {
   try {
-    const boxes = await db.Box.find()
+    const boxes = await db.Box.find().populate("seller").lean()
     return res.render("boxes/index", {boxes, session: req.session})
   } catch (error) {
     return next(error)
@@ -14,7 +14,8 @@ router.get('/', async (req, res, next) => {
 
 // new box
 router.get("/new", async (req, res, next) => {
-  return res.render("boxes/new", {session: req.session})
+  const sellers = await db.Seller.find().lean()
+  return res.render("boxes/new", {sellers, session: req.session})
 })
 
 // Create a new box

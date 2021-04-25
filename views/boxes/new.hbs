@@ -2,9 +2,10 @@
 <form action="/boxes" method="POST" class="ui form">
 <div class="field">
     <label>Seller</label>
-    <select name="" id="">
-        <option value="1">1</option>
-        <option value="1">1</option>
+    <select name="seller_id" id="seller_id">
+        {{#each sellers}}
+        <option value={{this._id}}>{{this.name}}</option>
+        {{/each}}
     </select>
 </div>
 </form>

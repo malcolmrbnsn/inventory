@@ -1,2 +1,21 @@
 <h1>Boxes</h1>
 <a href="/boxes/new" class="ui button">new box</a>
+
+<table class="ui celled table">
+    <thead>
+        <tr>
+        <th>Box Type</th>
+        <th>Seller Name</th>
+        <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#each boxes}}
+    <tr>
+        <td>{{this.type}}</td>
+        <td>{{this.email}}</td>
+        <td>{{this}}</td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>
