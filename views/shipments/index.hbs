@@ -1,9 +1,39 @@
 <h1>Shipments</h1>
-<button class="ui button" onclick="$('.ui.modal').modal('show');">New Shipment</button>
-<div class="ui modal">
+
+<button class="ui button" onclick="$('#modal_addShipment').modal('show');">Add Shipment</button>
+<table class="ui celled table">
+    <thead>
+        <tr>
+            <th class="two wide">Date Ordered</th>
+            <th class="two wide">Boxes</th>
+            <th class="two wide">Cost($)</th>
+            <th class="two wide">Due Date</th>
+            <th class="two wide">Goods recieved</th>
+            <th class="two wide">Payment sent</th>
+            <th class="three wide">Options</th>
+        </tr>
+    </thead>
+    {{#each shipments}}
+    <tr>
+        <td>{{displayDate this.ordered}}</td>
+        <td>{{this.quantity}}</td>
+        <td>{{this.cost}}</td>
+        <td>{{displayDate this.dueDate}}</td>
+        <td>{{#if this.goodsRecieved}}Yes{{else}}No{{/if}}</td>
+        <td>{{#if this.paymentSent}}Yes{{else}}No{{/if}}</td>
+        <td>
+        <button onclick="$('#modal_{{this._id}}').modal('show');" class="ui yellow button">Edit</button>
+                <button form="delete_{{this._id}}" class="ui red button" type="submit">Delete</button>
+            <form action="/shipments/{{this._id}}?_method=DELETE" id="delete_{{this._id}}" method="post"></form>
+        </td>
+    </tr>
+    {{/each}}
+</table>
+
+<div id="modal_addShipment" class="ui modal">
     <div class="header">Add Shipment</div>
     <div class="content">
-        <form action="/shipments" id="addShipment" method="POST" class="ui form">
+        <form action="/shipments" id="form_addShipment" method="POST" class="ui form">
             <div class="inline fields">
                 <div class="field">
                     <label>Quantity</label>
@@ -13,7 +43,7 @@
                     <label>Total Cost</label>
                     <div class="ui labeled input">
                         <label class="ui label" for="cost">$</label>
-                    <input type="number" name="cost">
+                        <input type="number" name="cost">
                     </div>
                 </div>
                 <div class="field">
@@ -38,31 +68,51 @@
             $('.ui.checkbox')
                 .checkbox();
         </script>
-</div>
-            <div class="actions">
-                <button class="ui right positive button" form="addShipment" type="submit">Add Shipment</button>
-            </div>
+    </div>
+    <div class="actions">
+        <button class="ui right positive button" form="form_addShipment" type="submit">Add Shipment</button>
+    </div>
 </div>
 
-<table class="ui celled table">
-    <thead>
-        <tr>
-            <th>Quantity</th>
-            <th>Date Ordered</th>
-            <th>Cost</th>
-            <th>Due Date</th>
-            <th>Goods recieved</th>
-            <th>Payment sent</th>
-        </tr>
-    </thead>
-    {{#each shipments}}
-    <tr>
-        <td>{{this.quantity}}</td>
-        <td>{{this.dateOrdered}}</td>
-        <td>{{this.cost}}</td>
-        <td>{{this.dueDate}}</td>
-        <td>{{this.goodsRecieved}}</td>
-        <td>{{this.paymentSent}}</td>
-    </tr>
-    {{/each}}
-</table>
+{{#each shipments}}
+<div id="modal_{{this._id}}" class="ui modal">
+    <div class="header">Edit Shipment</div>
+    <div class="content">
+        <form action="/shipments/{{this._id}}?_method=PUT" id="form_{{this._id}}" method="POST" class="ui form">
+            <div class="inline fields">
+                <div class="field">
+                    <label>Quantity</label>
+                    <input type="number" name="quantity" value="{{this.quantity}}">
+                </div>
+                <div class="field">
+                    <label>Total Cost</label>
+                    <div class="ui labeled input">
+                        <label class="ui label" for="cost">$</label>
+                        <input type="number" value="{{this.cost}}" name="cost">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Date Ordered</label>
+                    <input type="date" value="{{formatDate this.ordered}}" name="ordered">
+                </div>
+                <div class="field">
+                    <label>Goods Recieved</label>
+                    <div class="ui checkbox">
+                        <input type="checkbox" {{#if this.goodsRecieved}}checked{{/if}} class="hidden"
+                            name="goodsRecieved">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Payment Sent</label>
+                    <div class="ui checkbox">
+                        <input type="checkbox" {{#if this.paymentSent}}checked{{/if}} class="hidden" name="paymentSent">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="actions">
+        <button class="ui right positive button" form="form_{{this._id}}" type="submit">Update</button>
+    </div>
+</div>
+{{/each}}

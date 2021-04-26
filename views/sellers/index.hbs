@@ -1,21 +1,67 @@
 <h1>Sellers</h1>
-<a href="/sellers/new" class="ui button">new seller</a>
+<button class="ui button" onclick="$('#modal_addSeller').modal('show');">New Seller</button>
 
 <table class="ui celled table">
     <thead>
         <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Boxes out</th>
+            <th class="four wide">Name</th>
+            <th class="two wide">Boxes out</th>
+            <th class="seven wide">Email</th>
+            <th class="three wide">Options</th>
         </tr>
     </thead>
     <tbody>
-    {{#each sellers}}
-    <tr>
-        <td>{{this.name}}</td>
-        <td>{{this.email}}</td>
-        <td>{{this.boxes}}</td>
-    </tr>
-    {{/each}}
+        {{#each sellers}}
+        <tr>
+            <td>{{this.name}}</td>
+            <td>{{count this.boxes}}</td>
+            <td>{{this.email}}</td>
+        <td>
+        <button onclick="$('#modal_{{this._id}}').modal('show');" class="ui yellow button">Edit</button>
+                <button form="delete_{{this._id}}" class="ui red button" type="submit">Delete</button>
+            <form action="/sellers/{{this._id}}?_method=DELETE" id="delete_{{this._id}}" method="post"></form>
+        </td>
+        </tr>
+        {{/each}}
     </tbody>
 </table>
+
+<div id="modal_addSeller" class="ui modal">
+    <div class="header">Add Seller</div>
+    <div class="content">
+        <form action="/sellers" method="POST" id="form_addSeller" class="ui form">
+            <div class="field">
+                <label>name</label>
+                <input type="text" name="name" id="name">
+            </div>
+            <div class="field">
+                <label>email</label>
+                <input type="text" name="email" id="email">
+            </div>
+        </form>
+    </div>
+    <div class="actions">
+        <button class="ui right positive button" form="form_addSeller" type="submit">Add Seller</button>
+    </div>
+</div>
+
+{{#each sellers}}
+<div id="modal_{{this._id}}" class="ui modal">
+    <div class="header">Add Seller</div>
+    <div class="content">
+        <form action="/sellers/{{this._id}}?_method=PUT" method="POST" id="form_{{this._id}}" class="ui form">
+            <div class="field">
+                <label>name</label>
+                <input type="text" name="name" value="{{this.name}}" required id="name">
+            </div>
+            <div class="field">
+                <label>email</label>
+                <input type="email" name="email" value="{{this.email}}" required id="email">
+            </div>
+        </form>
+    </div>
+    <div class="actions">
+        <button class="ui right positive button" form="form_addSeller" type="submit">Add Seller</button>
+    </div>
+</div>
+{{/each}}

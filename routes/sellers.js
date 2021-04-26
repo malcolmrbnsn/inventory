@@ -15,11 +15,6 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-// new seller
-router.get("/new", async (req, res, next) => {
-  return res.render("sellers/new", {session: req.session})
-})
-
 router.post('/', async (req, res, next) => {
   try {
     const data = req.body
@@ -29,7 +24,7 @@ router.post('/', async (req, res, next) => {
       boxes: []
     })
     await seller.save()
-    return res.status(201).send(seller)
+    return res.redirect("/sellers")
   } catch (error) {
     next(error)
   }
@@ -50,16 +45,9 @@ router.get('/:id', async (req, res, next) => {
 router.post('/:id', async (req, res, next) => {
 })
 
-// delete user
-router.delete('/:id', async (req, res, next) => {
-  try {
-    db.Seller.deleteOne(req.params.id)
-    return res.send({
-      success: true
-    })
-  } catch (error) {
-    return next(error)
-  }
+router.delete("/:id", async (req, res) => {
+    await db.Seller.findOneAndDelete(req.params.id)
+    return res.redirect("/sellers")
 })
 
 module.exports = router

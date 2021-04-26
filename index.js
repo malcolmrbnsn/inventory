@@ -5,8 +5,10 @@ const express = require('express')
 const app = express() // Initialise the server
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
 const cookieSession = require('cookie-session')
 const morgan = require('morgan')
+const moment = require('moment')
 require('dotenv').config()
 
 /**
@@ -23,6 +25,7 @@ const IP = process.env.IP || '127.0.0.1'
 app.use(morgan('short'))
 
 app.use(bodyParser.urlencoded({ extended: true })) // Parses form data from the browser
+app.use(methodOverride('_method'))
 
 // Cookie session setup
 app.use(cookieSession({
@@ -36,7 +39,13 @@ app.use(cookieSession({
 // Enable HTML templating
 app.engine('hbs', exphbs({
   layoutsDir: __dirname + '/views/layouts',
-  extname: 'hbs'
+  extname: 'hbs',
+  helpers: {
+    displayDate: val => moment(val).format("MMM Do YY"),
+    formatDate: val => moment(val).format("YYYY-MM-DD"),
+    count: val => val.length
+    }
+
 }));
 app.set('view engine', 'hbs')
 

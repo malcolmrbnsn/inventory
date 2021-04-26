@@ -6,7 +6,8 @@ const databaseURI = process.env.DB_URI || 'mongodb://localhost/inventory'
 
 mongoose.connect(databaseURI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: false
 })
   .then(() => console.log('MONGO: connected'))
   .catch(err => console.log(`MONGO: connection error: ${err.message}`))
