@@ -16,3 +16,4 @@ mongoose.set('useCreateIndex', true) // Hides collection.ensureIndex deprication
 module.exports.Box = require('./box')
 module.exports.User = require('./user')
 module.exports.Seller = require('./seller')
+module.exports.Shipment = require('./shipment')

@@ -4,7 +4,6 @@
 const express = require('express')
 const app = express() // Initialise the server
 const exphbs = require('express-handlebars')
-const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 const morgan = require('morgan')
@@ -24,7 +23,6 @@ const IP = process.env.IP || '127.0.0.1'
 app.use(morgan('short'))
 
 app.use(bodyParser.urlencoded({ extended: true })) // Parses form data from the browser
-app.use(helmet()) // Blocks any insecure HTTP/HTTPS headers
 
 // Cookie session setup
 app.use(cookieSession({
@@ -42,6 +40,9 @@ app.engine('hbs', exphbs({
 }));
 app.set('view engine', 'hbs')
 
+//public
+app.use(express.static('public'))
+
 /**
  * Route Definitions
  */
@@ -49,11 +50,13 @@ const homeRoutes = require('./routes/home')
 const boxesRoutes = require('./routes/boxes')
 const sellersRoutes = require('./routes/sellers')
 const userRoutes = require('./routes/users')
+const shipmentRoutes = require('./routes/shipments')
 
 app.use('/', homeRoutes)
 app.use('/', userRoutes)
 app.use('/boxes', boxesRoutes)
 app.use('/sellers', sellersRoutes)
+app.use('/shipments', shipmentRoutes)
 
 // Error handler route
 const errorHandler = require('./helpers/error')

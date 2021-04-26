@@ -1,0 +1,68 @@
+<h1>Shipments</h1>
+<button class="ui button" onclick="$('.ui.modal').modal('show');">New Shipment</button>
+<div class="ui modal">
+    <div class="header">Add Shipment</div>
+    <div class="content">
+        <form action="/shipments" id="addShipment" method="POST" class="ui form">
+            <div class="inline fields">
+                <div class="field">
+                    <label>Quantity</label>
+                    <input type="number" name="quantity">
+                </div>
+                <div class="field">
+                    <label>Total Cost</label>
+                    <div class="ui labeled input">
+                        <label class="ui label" for="cost">$</label>
+                    <input type="number" name="cost">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Date Ordered</label>
+                    <input type="date" name="ordered">
+                </div>
+                <div class="field">
+                    <label>Goods Recieved</label>
+                    <div class="ui checkbox">
+                        <input type="checkbox" class="hidden" name="goodsRecieved">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Payment Sent</label>
+                    <div class="ui checkbox">
+                        <input type="checkbox" class="hidden" name="paymentSent"> $
+                    </div>
+                </div>
+            </div>
+        </form>
+        <script>
+            $('.ui.checkbox')
+                .checkbox();
+        </script>
+</div>
+            <div class="actions">
+                <button class="ui right positive button" form="addShipment" type="submit">Add Shipment</button>
+            </div>
+</div>
+
+<table class="ui celled table">
+    <thead>
+        <tr>
+            <th>Quantity</th>
+            <th>Date Ordered</th>
+            <th>Cost</th>
+            <th>Due Date</th>
+            <th>Goods recieved</th>
+            <th>Payment sent</th>
+        </tr>
+    </thead>
+    {{#each shipments}}
+    <tr>
+        <td>{{this.quantity}}</td>
+        <td>{{this.dateOrdered}}</td>
+        <td>{{this.cost}}</td>
+        <td>{{this.dueDate}}</td>
+        <td>{{this.goodsRecieved}}</td>
+        <td>{{this.paymentSent}}</td>
+    </tr>
+    {{/each}}
+</table>

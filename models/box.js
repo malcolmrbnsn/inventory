@@ -1,14 +1,29 @@
 const mongoose = require('mongoose')
-const seller = require('./seller')
+const Seller = require('./seller')
 
 const BoxSchema = new mongoose.Schema({
-  startDate: Date,
-  endDate: Date,
-  boxType: String,
+  startDate: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  endDate: {
+    type: Date,
+    default: -1
+  },
+  boxType: {
+    type: String,
+    required: true
+  },
   seller: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Seller',
     required: true
+  },
+  amount: {
+    type: String,
+    required: true,
+    default: 60
   }
 })
 
