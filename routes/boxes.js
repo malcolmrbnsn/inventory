@@ -6,7 +6,7 @@ const db = require('../models')
 router.get('/', async (req, res, next) => {
   try {
     const boxes = await db.Box.find().populate("seller").lean()
-    return res.render("boxes/index", {boxes, session: req.session})
+    return res.render("boxes/index", {boxes, session: req.session, title: "Boxes"})
   } catch (error) {
     return next(error)
   }
@@ -31,7 +31,7 @@ router.post('/', async (req, res, next) => {
     await seller.boxes.push(box)
     await seller.save()
 
-    return res.status(201).send(box)
+    return res.redirect("/boxes")
   } catch (error) {
     next(error)
   }

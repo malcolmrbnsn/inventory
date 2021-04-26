@@ -11,7 +11,8 @@ const { body, validationResult } = require('express-validator');
 router.get('/signup', async (req, res) => {
   res.render('users/signup',
     {
-      session: req.session
+      session: req.session,
+      title: "Signup"
     })
 })
 
@@ -45,7 +46,8 @@ router.post('/signup',
       console.log(error.array())
       return res.render('users/signup', {
         errors: error.array(),
-        session: req.session
+        session: req.session,
+        title: "Sign Up"
       })
     }
   })
@@ -57,7 +59,8 @@ router.post('/signup',
  */
 router.get('/login', async (req, res) => {
   res.render('users/login', {
-    session: req.session
+    session: req.session,
+    title: "Log In"
   })
 })
 
@@ -80,7 +83,8 @@ router.post('/login', async (req, res, next) => {
     console.log(error.message)
     return res.render('users/login', {
       error: error.message,
-      session: req.session
+      session: req.session,
+      title: "Log In"
     })
   }
 })

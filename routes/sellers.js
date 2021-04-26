@@ -8,7 +8,8 @@ router.get('/', async (req, res, next) => {
     const sellers = await db.Seller.find().lean()
     return res.render("sellers/index", {
       sellers: sellers,
-      session: req.session
+      session: req.session,
+      title: "Sellers"
     })
   } catch (error) {
     next(error)
@@ -27,17 +28,6 @@ router.post('/', async (req, res, next) => {
     return res.redirect("/sellers")
   } catch (error) {
     next(error)
-  }
-})
-
-// get user
-router.get('/:id', async (req, res, next) => {
-  try {
-    const seller = db.Seller.findOne(req.params.id)
-
-    return res.status(200).send(seller)
-  } catch (error) {
-    return next(error)
   }
 })
 
