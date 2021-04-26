@@ -43,7 +43,8 @@ app.engine('hbs', exphbs({
   helpers: {
     displayDate: val => moment(val).format("MMM Do YY"),
     formatDate: val => moment(val).format("YYYY-MM-DD"),
-    count: val => val.length
+    count: val => val.length,
+    idMatches: (val1, val2) => val1.equals(val2)
     }
 
 }));

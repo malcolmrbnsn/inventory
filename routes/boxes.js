@@ -2,68 +2,113 @@ const express = require('express')
 const router = express.Router()
 const db = require('../models')
 
+const checkAuth = require("../helpers/auth");
+const validateFields = require("../helpers/form");
+
 // Base route: /api/boxes
-router.get('/', async (req, res, next) => {
+router.get('/', checkAuth, async (req, res, next) => {
   try {
     const boxes = await db.Box.find().populate("seller").lean()
-    return res.render("boxes/index", {boxes, session: req.session, title: "Boxes"})
+    const sellers = await db.Seller.find().lean()
+    return res.render("boxes/index", { boxes, sellers, session: req.session, title: "Boxes" })
   } catch (error) {
     return next(error)
   }
 })
 
-// new box
-router.get("/new", async (req, res, next) => {
-  const sellers = await db.Seller.find().lean()
-  return res.render("boxes/new", {sellers, session: req.session})
-})
-
 // Create a new box
-router.post('/', async (req, res, next) => {
+router.post('/', checkAuth, async (req, res) => {
   try {
+    let {
+      sellerId, startDate, boxType, amount
+    } = req.body;
+    if (!validateFields([sellerId, startDate, boxType, amount])) {
+      return res.redirect("/boxes")
+    }
+
+    const seller = await db.Seller.findById(sellerId)
+    if (!seller) {
+      return res.redirect("/boxes")
+    }
+
+    startDate = new Date(startDate)
+
     const box = await db.Box.create({
-      seller: req.body.sellerId,
-      startDate: req.body.startDate,
-      boxType: req.body.boxType
+      seller: sellerId,
+      startDate,
+      boxType,
+      amount
     })
 
-    const seller = await db.Seller.findById(box.sellerId)
     await seller.boxes.push(box)
     await seller.save()
 
     return res.redirect("/boxes")
   } catch (error) {
-    next(error)
+
+
+    console.log(error)
+
+
   }
 })
 
-// Get a specific box using the ID
-router.get('/:id', async (req, res, next) => {
+router.put('/:id', checkAuth, async (req, res) => {
   try {
-    const box = db.Box.findOne(req.params.id)
-    return res.send(box)
+    let {
+      sellerId, startDate, boxType, amount
+    } = req.body;
+
+    if (!validateFields([sellerId, startDate, boxType, amount])) {
+      return res.redirect("/boxes")
+    }
+
+    startDate = new Date(startDate)
+    let box = await db.Box.findById(req.params.id)
+
+
+    if (box.seller._id === !sellerId) {
+      box = await db.Box.findOneAndUpdate(req.params.id, {
+        $set: {
+          startDate,
+          boxType,
+          amount,
+          seller: sellerId
+        }
+      })
+      const oldSeller = await db.Seller.findById(sellerId);
+      await oldSeller.boxes.remove(this._id)
+      await oldSeller.save()
+
+      const newSeller = await db.Seller.findById(sellerId);
+      await newSeller.boxes.push(box)
+      await newSeller.save()
+    } else {
+      await db.Box.findOneAndUpdate(req.params.id, {
+        $set: {
+          startDate,
+          boxType,
+          amount
+        }
+      })
+    }
+
+    return res.redirect("/boxes")
   } catch (error) {
-    return next(error)
+
+
+    console.log(error)
+
+
   }
 })
 
-// Update a specific box
-router.post('/:id', async (req, res, next) => {
-  // update the box and save it
-  const box = db.Box.findById(req.params.id)
 
-  return res.send(box)
-})
 
-router.delete('/:id', async (req, res, next) => {
-  try {
-    db.Box.deleteOne(req.params.id)
-    return res.send({
-      success: true
-    })
-  } catch (error) {
-    next(error)
-  }
+
+router.delete("/:id", checkAuth, async (req, res) => {
+  await db.Box.findOneAndDelete(req.params.id)
+  return res.redirect("/boxes")
 })
 
 module.exports = router

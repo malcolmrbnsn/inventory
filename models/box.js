@@ -8,8 +8,7 @@ const BoxSchema = new mongoose.Schema({
     default: Date.now
   },
   endDate: {
-    type: Date,
-    default: -1
+    type: Date
   },
   boxType: {
     type: String,
@@ -30,7 +29,7 @@ const BoxSchema = new mongoose.Schema({
 BoxSchema.pre('remove', async function (next) {
   try {
     const seller = await Seller.findById(this.seller.id)
-    await seller.alarms.remove(this._id)
+    await seller.boxes.remove(this._id)
     await seller.save()
 
     return next()

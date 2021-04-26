@@ -1,21 +1,112 @@
 <h1>Boxes</h1>
-<a href="/boxes/new" class="ui button">new box</a>
+<button class="ui button" onclick="$('#modal_addBox').modal('show');">New Box</button>
 
 <table class="ui celled table">
     <thead>
         <tr>
-        <th>Box Type</th>
-        <th>Seller Name</th>
-        <th>Status</th>
+            <th class=" wide">Box Type</th>
+            <th class=" wide">Seller</th>
+            <th class=" wide">Status</th>
+            <th class=" wide">Amount</th>
+            <th>Days Out</th>
+            <th class="three wide">Options</th>
         </tr>
     </thead>
     <tbody>
-    {{#each boxes}}
-    <tr>
-        <td>{{this.type}}</td>
-        <td>{{this.email}}</td>
-        <td>{{this}}</td>
-    </tr>
-    {{/each}}
+        {{#each boxes}}
+        <tr>
+            <td>{{this.boxType}}</td>
+            <td>{{this.seller.name}}</td>
+            <td>{{this}}</td>
+            <td>{{this.amount}}</td>
+            <td>{{this}}</td>
+
+            <td>
+                <button onclick="$('#modal_{{this._id}}').modal('show');" class="ui yellow button">Edit</button>
+                <button form="delete_{{this._id}}" class="ui red button" type="submit">Delete</button>
+                <form action="/boxes/{{this._id}}?_method=DELETE" id="delete_{{this._id}}" method="post"></form>
+            </td>
+        </tr>
+        {{/each}}
     </tbody>
 </table>
+
+<div id="modal_addBox" class="ui modal">
+    <div class="header">Add Box</div>
+    <div class="content">
+        <form action="/boxes" method="POST" id="form_addBox" class="ui form">
+        <div class="fields">
+            <div class="field">
+                <label>startdate</label>
+                <input type="date" name="startDate" id="name">
+            </div>
+            <div class="field">
+                <label>boxType</label>
+                <select class="ui dropdown" name="boxType">
+                    <option value="Freddos">Freddos</option>
+                    <option value="Mixed">Mixed</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Seller</label>
+                <select class="ui dropdown" name="sellerId">
+                    {{#each sellers}}
+                    <option value={{this._id}}>{{this.name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="field">
+                <label>amount</label>
+                <div class="ui labeled input">
+                    <label class="ui label" for="cost">$</label>
+                    <input value="60" type="number" name="amount">
+                </div>
+            </div>
+            </div>
+        </form>
+    </div>
+    <div class="actions">
+        <button class="ui right positive button" form="form_addBox" type="submit">Add Box</button>
+    </div>
+</div>
+
+{{#each boxes}}
+<div id="modal_{{this._id}}" class="ui modal">
+    <div class="header">Add Box</div>
+    <div class="content">
+        <form action="/boxes/{{this._id}}?_method=PUT" method="POST" id="form_{{this._id}}" class="ui form">
+        <div class="fields">
+            <div class="field">
+                <label>startdate</label>
+                <input type="date" value="{{formatDate this.startDate}}" name="startDate" id="name">
+            </div>
+            <div class="field">
+                <label>boxType</label>
+                <select value="{{this.boxType}}" class="ui dropdown" name="boxType">
+                    <option value="Freddos">Freddos</option>
+                    <option value="Mixed">Mixed</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Seller</label>
+                <select class="ui dropdown" name="sellerId">
+                    {{#each ../sellers}}
+                    <option {{#if (idMatches this._id ../seller._id)}}selected{{/if}} value={{this._id}}>{{this.name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="field">
+                <label>amount</label>
+                <div class="ui labeled input">
+                    <label class="ui label" for="cost">$</label>
+                    <input value="{{this.amount}}" type="number" name="amount">
+                </div>
+            </div>
+            </div>
+        </form>
+    </div>
+    <div class="actions">
+        <button class="ui right positive button" form="form_{{this._id}}" type="submit">Add Box</button>
+    </div>
+</div>
+{{/each}}

@@ -1,9 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../models')
-const { body, validationResult } = require('express-validator');
+const validateFields = require("../helpers/form")
 
-router.get("/", async (req, res) => {
+const checkAuth = require("../helpers/auth");
+
+router.get("/", checkAuth, async (req, res) => {
     try {
         let shipments = await db.Shipment.find().lean()
         return res.render("shipments/index", { shipments, session: req.session, title: "Shipments" })
@@ -13,7 +15,7 @@ router.get("/", async (req, res) => {
     }
 })
 
-router.post("/", async (req, res) => {
+router.post("/", checkAuth, async (req, res) => {
     try {
         let {
             quantity,
@@ -26,7 +28,7 @@ router.post("/", async (req, res) => {
         goodsRecieved = goodsRecieved === 'on'
         paymentSent = paymentSent === 'on'
 
-        if (quantity.length === 0 || cost.length === 0 || ordered.length === 0) {
+        if (!validateFields(quantity, cost, ordered)) {
             
 
             //need to alert user here
@@ -58,7 +60,7 @@ router.post("/", async (req, res) => {
     }
 })
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", checkAuth, async (req, res) => {
     try {
         const { id } = req.params;
         let {
@@ -104,7 +106,7 @@ router.put("/:id", async (req, res) => {
     }
 })
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", checkAuth, async (req, res) => {
     await db.Shipment.findOneAndDelete(req.params.id)
     return res.redirect("/shipments")
 })

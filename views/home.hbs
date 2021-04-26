@@ -1,1 +1,149 @@
-<h1>Landing page</h1>
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory</title>
+    <link rel="stylesheet" href="/lib/semantic-ui.css">
+    <script src="/lib/jquery.js"></script>
+    <script src="/lib/semantic-ui.js"></script>
+</head>
+
+<body class="pushable">
+    <div class="ui sidebar inverted vertical menu">
+        <a href="/dashboard" class="ui item"><i class="home icon"></i>Home</a>
+        {{#if session.loggedIn}}
+        <a class="item" href="/logout">Logout</a>
+        {{else}}
+        <a class="ui item"
+            href="/login">Login</a>
+        <a class="ui item"
+            href="/signup">Sign Up</a>
+        {{/if}}
+    </div>
+    <div class="pusher">
+        <div class="ui inverted vertical center aligned segment">
+            <div class="ui container">
+                <div class="ui massive borderless inverted menu">
+                    <h1 class="header item">
+                        Inventory
+                    </h1>
+                    <div class="right item desktop-only">
+                        <div class="ui massive secondary inverted pointing menu">
+                            <a href="/dashboard" class="item">Home</a>
+                            {{#if session.loggedIn}}
+                                    <a class="item" href="/logout">Logout</a>
+                                    {{else}}
+                                <a class="item"
+                                    href="/login">Login</a>
+                                <a class="item"
+                                    href="/signup">Sign Up</a>
+                                    {{/if}}
+                        </div>
+                    </div>
+                    <div class="right item mobile-only">
+                        <a class="ui item" id="expandheader">
+                            <i class="bars icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {{!-- <div class="ui container">
+                <% if(error && error.length> 0){ %>
+                    <div class="ui error message">
+                        <%= error %>
+                    </div>
+                    <% } %>
+                        <% if(success && success.length> 0){ %>
+                            <div class="ui success message">
+                                <%= success %>
+                            </div>
+                            <% } %>
+            </div> --}}
+            <div class="ui text container">
+                <h1 class="ui inverted header">
+                    Welcome to Inventory
+                </h1>
+                <a href="/dashboard" class="ui massive white button">
+                    Get started
+                </a>
+            </div>
+        </div>
+    </div>
+    <script>
+        $("#expandheader").click(function () {
+            $('.ui.sidebar')
+                .sidebar('toggle');
+        });
+    </script>
+    <style>
+        /* Hide and show elements on mobile, desktop */
+
+        @media (min-width:992px) {
+            .desktop-only {
+                display: block !important;
+            }
+
+            .mobile-only {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .mobile-only {
+                display: block !important;
+            }
+
+            .desktop-only {
+                display: none !important;
+            }
+        }
+
+        .ui.inverted.vertical.segment {
+            height: 100vh;
+        }
+
+        .ui.inverted.vertical.segment h1.header.item {
+            font-size: 2em;
+        }
+
+        .ui.inverted.vertical.segment a.item {
+            font-size: 1.2em;
+        }
+
+        .ui.inverted.vertical.segment .ui.text.container {
+            height: 300px;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+
+        .ui.inverted.vertical.segment .ui.text.container h1.header {
+            font-size: 3em;
+        }
+
+        .ui.inverted.vertical.segment .ui.text.container p {
+            font-size: 1.6em;
+            line-height: 1.6;
+        }
+
+        .ui.inverted.vertical.segment .ui.footer.segment {
+            height: 80px;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            font-size: 1.2em;
+            color: gray;
+        }
+
+        .ui.inverted.vertical.segment .ui.footer.segment a {
+            color: white;
+        }
+    </style>
+</body>
+
+</html>

@@ -47,7 +47,7 @@
 
 {{#each sellers}}
 <div id="modal_{{this._id}}" class="ui modal">
-    <div class="header">Add Seller</div>
+    <div class="header">Update Seller</div>
     <div class="content">
         <form action="/sellers/{{this._id}}?_method=PUT" method="POST" id="form_{{this._id}}" class="ui form">
             <div class="field">
@@ -61,7 +61,7 @@
         </form>
     </div>
     <div class="actions">
-        <button class="ui right positive button" form="form_addSeller" type="submit">Add Seller</button>
+        <button class="ui right positive button" form="form_{{this._id}}" type="submit">Update Seller</button>
     </div>
 </div>
 {{/each}}
