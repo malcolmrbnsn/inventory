@@ -43,11 +43,9 @@ router.post('/signup',
       req.flash("Success", "Logged in as " + user.email)
       return res.redirect("/dashboard")
     } catch (error) {
-
+      console.log(error)
       req.flash("error", "An error ocurred")
-      return res.render('users/signup', {
-        title: "Sign Up"
-      })
+      return res.redirect("/signup")
     }
   })
 
