@@ -8,10 +8,11 @@ const checkAuth = require("../helpers/auth");
 router.get("/", checkAuth, async (req, res) => {
     try {
         let shipments = await db.Shipment.find().lean()
-        return res.render("shipments/index", { shipments, session: req.session, title: "Shipments" })
+        return res.render("shipments/index", { shipments, title: "Shipments" })
 
     } catch (error) {
-        throw new Error()
+        req.flash("error", "An error occured.")
+        return res.redirect("/shipments")
     }
 })
 
@@ -29,12 +30,7 @@ router.post("/", checkAuth, async (req, res) => {
         paymentSent = paymentSent === 'on'
 
         if (!validateFields(quantity, cost, ordered)) {
-            
-
-            //need to alert user here
-
-
-            
+            req.flash("error", "Ensure all fields are correct")
             return res.redirect("/shipments")
         }
         ordered = new Date(ordered)
@@ -50,13 +46,15 @@ router.post("/", checkAuth, async (req, res) => {
             paymentSent,
             dueDate
         })
-        
+
         await shipment.save()
 
+        req.flash("success", "Shipment added")
         return res.redirect("/shipments")
 
     } catch (error) {
-        console.log(error)
+        req.flash("error", "An error occured.")
+        return res.redirect("/shipments")
     }
 })
 
@@ -75,12 +73,7 @@ router.put("/:id", checkAuth, async (req, res) => {
         paymentSent = paymentSent === 'on'
 
         if (quantity.length === 0 || cost.length === 0 || ordered.length === 0) {
-            
-
-            //need to alert user here
-
-
-            
+            req.flash("error", "Ensure all fields are correct")
             return res.redirect("/shipments")
         }
 
@@ -91,24 +84,34 @@ router.put("/:id", checkAuth, async (req, res) => {
 
         await db.Shipment.findOneAndUpdate(id, {
             $set: {
-            quantity,
-            ordered,
-            cost,
-            goodsRecieved,
-            paymentSent,
-            dueDate
-        }})
-        
+                quantity,
+                ordered,
+                cost,
+                goodsRecieved,
+                paymentSent,
+                dueDate
+            }
+        })
+
+        req.flash("success", "Shipment updated")
         return res.redirect("/shipments")
 
     } catch (error) {
-        console.log(error)
+        req.flash("error", "An error occured.")
+        return res.redirect("/shipments")
     }
 })
 
 router.delete("/:id", checkAuth, async (req, res) => {
-    await db.Shipment.findOneAndDelete(req.params.id)
-    return res.redirect("/shipments")
+    try {
+        await db.Shipment.findOneAndDelete(req.params.id)
+        req.flash("success", "Shipment deleted")
+        return res.redirect("/shipments")
+    } catch (error) {
+        req.flash("error", "An error occured.")
+        return res.redirect("/shipments")
+
+    }
 })
 
 module.exports = router

@@ -11,7 +11,6 @@ const { body, validationResult } = require('express-validator');
 router.get('/signup', async (req, res) => {
   res.render('users/signup',
     {
-      session: req.session,
       title: "Signup"
     })
 })
@@ -41,12 +40,11 @@ router.post('/signup',
         user,
         loggedIn: true
       }
+      req.flash("Success", "Logged in as " + user.email)
       return res.redirect("/dashboard")
     } catch (error) {
-      console.log(error.array())
+      req.flash("error", "An error ocurred")
       return res.render('users/signup', {
-        errors: error.array(),
-        session: req.session,
         title: "Sign Up"
       })
     }
@@ -59,7 +57,6 @@ router.post('/signup',
  */
 router.get('/login', async (req, res) => {
   res.render('users/login', {
-    session: req.session,
     title: "Log In"
   })
 })
@@ -78,19 +75,18 @@ router.post('/login', async (req, res, next) => {
       user,
       loggedIn: true
     }
+    req.flash("Success", "Logged in as " + user.email)
     return res.redirect("/dashboard")
+
   } catch (error) {
-    console.log(error.message)
-    return res.render('users/login', {
-      error: error.message,
-      session: req.session,
-      title: "Log In"
-    })
+    req.flash("error", "An error occured")
+    return res.redirect("/login")
   }
 })
 
 router.get("/signout", (req, res) => {
   req.session = { user: {}, loggedIn: false };
+  req.flash("success", "Signed out")
   res.redirect("/")
 })
 

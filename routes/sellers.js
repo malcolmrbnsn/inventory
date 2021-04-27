@@ -10,7 +10,6 @@ router.get('/', checkAuth, async (req, res, next) => {
     const sellers = await db.Seller.find().lean()
     return res.render("sellers/index", {
       sellers: sellers,
-      session: req.session,
       title: "Sellers"
     })
   } catch (error) {
@@ -27,8 +26,10 @@ router.post('/', checkAuth, async (req, res, next) => {
       boxes: []
     })
     await seller.save()
+    req.flash("success", "Seller added")
     return res.redirect("/sellers")
   } catch (error) {
+    req.flash("error", "An error occured.")
     next(error)
   }
 })
@@ -43,17 +44,17 @@ router.put('/:id', checkAuth, async (req, res, next) => {
       }
     })
 
+    req.flash("success", "Seller updated")
     return res.redirect("/sellers")
   } catch (error) {
-
-
-
-
+    req.flash("error", "An error occured.")
+    return res.redirect("/sellers")
   }
 })
 
 router.delete("/:id", checkAuth, async (req, res) => {
     await db.Seller.findOneAndDelete(req.params.id)
+    req.flash("success", "Seller deleted")
     return res.redirect("/sellers")
 })
 

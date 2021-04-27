@@ -10,7 +10,7 @@ router.get('/', checkAuth, async (req, res, next) => {
   try {
     const boxes = await db.Box.find().populate("seller").lean()
     const sellers = await db.Seller.find().lean()
-    return res.render("boxes/index", { boxes, sellers, session: req.session, title: "Boxes" })
+    return res.render("boxes/index", { boxes, sellers, title: "Boxes" })
   } catch (error) {
     return next(error)
   }
@@ -23,11 +23,13 @@ router.post('/', checkAuth, async (req, res) => {
       sellerId, startDate, boxType, amount
     } = req.body;
     if (!validateFields([sellerId, startDate, boxType, amount])) {
+      req.flash("error", "Ensure all fields are correct")
       return res.redirect("/boxes")
     }
 
     const seller = await db.Seller.findById(sellerId)
     if (!seller) {
+      req.flash("error", "Incorrect seller entered")
       return res.redirect("/boxes")
     }
 
@@ -42,13 +44,11 @@ router.post('/', checkAuth, async (req, res) => {
 
     await seller.boxes.push(box)
     await seller.save()
-
+    req.flash("success", "Box created!")
     return res.redirect("/boxes")
   } catch (error) {
-
-
-    console.log(error)
-
+    res.flash("error", "An error occured.")
+    return res.redirect("/boxes")
 
   }
 })
@@ -60,6 +60,7 @@ router.put('/:id', checkAuth, async (req, res) => {
     } = req.body;
 
     if (!validateFields([sellerId, startDate, boxType, amount])) {
+      req.flash("error", "Ensure all fields are correct")
       return res.redirect("/boxes")
     }
 
@@ -93,21 +94,18 @@ router.put('/:id', checkAuth, async (req, res) => {
       })
     }
 
+    req.flash("success", "Box updated")
     return res.redirect("/boxes")
   } catch (error) {
-
-
-    console.log(error)
-
+    req.flash("error", "An error occured")
+    return res.redirect("/boxes")
 
   }
 })
 
-
-
-
 router.delete("/:id", checkAuth, async (req, res) => {
   await db.Box.findOneAndDelete(req.params.id)
+  req.flash("success", "Box deleted")
   return res.redirect("/boxes")
 })
 

@@ -7,11 +7,26 @@
     <link rel="stylesheet" href="/lib/semantic-ui.css">
     <script src="/lib/jquery.js"></script>
     <script src="/lib/semantic-ui.js"></script>
+    <style>
+        /* container spacing for navbar */
+
+        .container.space {
+            margin-top: 10em;
+            margin-bottom: 3em;
+        }
+
+        /* delete form button */
+
+        .delete {
+            display: inline;
+        }
+    </style>
 </head>
 
 <body>
     {{> nav}}
     <div class="ui container">
+        {{> flash}}
         {{{body}}}
     </div>
     <script>

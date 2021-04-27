@@ -1,14 +1,15 @@
 /**
  * Required External Modules
  */
-const express = require('express')
-const app = express() // Initialise the server
-const exphbs = require('express-handlebars')
-const bodyParser = require('body-parser')
-const methodOverride = require('method-override')
-const cookieSession = require('cookie-session')
-const morgan = require('morgan')
-const moment = require('moment')
+const express = require('express'),
+  exphbs = require('express-handlebars'),
+  bodyParser = require('body-parser'),
+  methodOverride = require('method-override'),
+  cookieSession = require('cookie-session'),
+  morgan = require('morgan'),
+  moment = require('moment'),
+  flash = require('connect-flash'),
+  app = express() // Initialise the server
 require('dotenv').config()
 
 /**
@@ -24,17 +25,25 @@ const IP = process.env.IP || '127.0.0.1'
 // Log web access to console
 app.use(morgan('short'))
 
-app.use(bodyParser.urlencoded({ extended: true })) // Parses form data from the browser
+// parse form data from the browser
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 
 // Cookie session setup
 app.use(cookieSession({
   name: 'session',
   secret: process.env.COOKIE_SECRET,
-  sameSite: true,
-  
-
+  sameSite: true
 }))
+app.use(flash())
+
+app.use(function(req, res, next){
+  res.locals.session = req.session;
+  res.locals.error = req.flash("error");
+  res.locals.success = req.flash("success");
+  next();
+});
+
 
 // Enable HTML templating
 app.engine('hbs', exphbs({
@@ -45,7 +54,7 @@ app.engine('hbs', exphbs({
     formatDate: val => moment(val).format("YYYY-MM-DD"),
     count: val => val.length,
     idMatches: (val1, val2) => val1.equals(val2)
-    }
+  }
 
 }));
 app.set('view engine', 'hbs')
