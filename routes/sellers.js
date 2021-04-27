@@ -13,6 +13,7 @@ router.get('/', checkAuth, async (req, res, next) => {
       title: "Sellers"
     })
   } catch (error) {
+    console.log(error)
     next(error)
   }
 })
@@ -29,6 +30,7 @@ router.post('/', checkAuth, async (req, res, next) => {
     req.flash("success", "Seller added")
     return res.redirect("/sellers")
   } catch (error) {
+    console.log(error)
     req.flash("error", "An error occured.")
     next(error)
   }
@@ -47,6 +49,7 @@ router.put('/:id', checkAuth, async (req, res, next) => {
     req.flash("success", "Seller updated")
     return res.redirect("/sellers")
   } catch (error) {
+    console.log(error)
     req.flash("error", "An error occured.")
     return res.redirect("/sellers")
   }

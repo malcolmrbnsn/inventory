@@ -11,6 +11,7 @@ router.get("/", checkAuth, async (req, res) => {
         return res.render("shipments/index", { shipments, title: "Shipments" })
 
     } catch (error) {
+    console.log(error)
         req.flash("error", "An error occured.")
         return res.redirect("/shipments")
     }
@@ -53,6 +54,7 @@ router.post("/", checkAuth, async (req, res) => {
         return res.redirect("/shipments")
 
     } catch (error) {
+    console.log(error)
         req.flash("error", "An error occured.")
         return res.redirect("/shipments")
     }
@@ -97,6 +99,7 @@ router.put("/:id", checkAuth, async (req, res) => {
         return res.redirect("/shipments")
 
     } catch (error) {
+    console.log(error)
         req.flash("error", "An error occured.")
         return res.redirect("/shipments")
     }
@@ -108,6 +111,7 @@ router.delete("/:id", checkAuth, async (req, res) => {
         req.flash("success", "Shipment deleted")
         return res.redirect("/shipments")
     } catch (error) {
+    console.log(error)
         req.flash("error", "An error occured.")
         return res.redirect("/shipments")
 

@@ -12,6 +12,7 @@ router.get('/', checkAuth, async (req, res, next) => {
     const sellers = await db.Seller.find().lean()
     return res.render("boxes/index", { boxes, sellers, title: "Boxes" })
   } catch (error) {
+    console.log(error)
     return next(error)
   }
 })
@@ -47,6 +48,7 @@ router.post('/', checkAuth, async (req, res) => {
     req.flash("success", "Box created!")
     return res.redirect("/boxes")
   } catch (error) {
+    console.log(error)
     res.flash("error", "An error occured.")
     return res.redirect("/boxes")
 
@@ -97,6 +99,7 @@ router.put('/:id', checkAuth, async (req, res) => {
     req.flash("success", "Box updated")
     return res.redirect("/boxes")
   } catch (error) {
+    console.log(error)
     req.flash("error", "An error occured")
     return res.redirect("/boxes")
 
