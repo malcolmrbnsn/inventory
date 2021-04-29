@@ -67,13 +67,16 @@ router.post('/login', async (req, res, next) => {
       email,
       password
     })
+
     if (!user) {
       throw new Error('E-mail address or password incorrect');
     }
+
     req.session = {
       user,
       loggedIn: true
     }
+
     req.flash("Success", "Logged in as " + user.email)
     return res.redirect("/dashboard")
 
