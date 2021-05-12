@@ -3,7 +3,8 @@ const router = express.Router()
 const db = require('../models')
 
 const checkAuth = require("../helpers/auth");
-const validateFields = require("../helpers/form");
+const {exists} = require("../helpers");
+const {sendMail} = require("../helpers/mail")
 
 // Base route: /api/boxes
 router.get('/', checkAuth, async (req, res, next) => {
@@ -23,7 +24,7 @@ router.post('/', checkAuth, async (req, res) => {
     let {
       sellerId, startDate, boxType, amount
     } = req.body;
-    if (!validateFields([sellerId, startDate, boxType, amount])) {
+    if (!exists([sellerId, startDate, boxType, amount])) {
       req.flash("error", "Ensure all fields are correct")
       return res.redirect("/boxes")
     }
@@ -61,7 +62,7 @@ router.put('/:id', checkAuth, async (req, res) => {
       sellerId, startDate, boxType, amount
     } = req.body;
 
-    if (!validateFields([sellerId, startDate, boxType, amount])) {
+    if (!exists(sellerId, startDate, boxType, amount)) {
       req.flash("error", "Ensure all fields are correct")
       return res.redirect("/boxes")
     }
