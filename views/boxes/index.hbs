@@ -17,7 +17,7 @@
         <tr>
             <td>{{this.boxType}}</td>
             <td>{{this.seller.name}}</td>
-            <td>{{this}}</td>
+            <td>{{this.status}}</td>
             <td>{{this.amount}}</td>
             <td>{{this}}</td>
 
@@ -77,8 +77,16 @@
         <form action="/boxes/{{this._id}}?_method=PUT" method="POST" id="form_{{this._id}}" class="ui form">
         <div class="fields">
             <div class="field">
-                <label>startdate</label>
+                <label>End Date</label>
                 <input type="date" value="{{formatDate this.startDate}}" name="startDate" id="name">
+            </div>
+            <div class="field">
+                <label>End Date</label>
+                {{#if this.endDate}}
+                <input type="date" value="{{formatDate this.startDate}}" name="startDate" id="name">
+                {{else}}
+                <input type="date" value="" name="endDate" id="name">
+                {{/if}}
             </div>
             <div class="field">
                 <label>boxType</label>

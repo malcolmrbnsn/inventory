@@ -41,7 +41,7 @@ router.post('/signup',
         loggedIn: true
       }
       req.flash("Success", "Logged in as " + user.email)
-      return res.redirect("/dashboard")
+      return res.redirect("/boxes")
     } catch (error) {
       console.log(error)
       req.flash("error", "An error ocurred")
@@ -78,7 +78,7 @@ router.post('/login', async (req, res, next) => {
     }
 
     req.flash("Success", "Logged in as " + user.email)
-    return res.redirect("/dashboard")
+    return res.redirect("/boxes")
 
   } catch (error) {
     console.log(error)

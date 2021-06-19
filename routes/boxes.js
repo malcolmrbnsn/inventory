@@ -3,14 +3,29 @@ const router = express.Router()
 const db = require('../models')
 
 const checkAuth = require("../helpers/auth");
-const {exists} = require("../helpers");
-const {sendMail} = require("../helpers/mail")
+const { exists } = require("../helpers");
+const { sendMail } = require("../helpers/mail")
 
 // Base route: /api/boxes
 router.get('/', checkAuth, async (req, res, next) => {
   try {
     const boxes = await db.Box.find().populate("seller").lean()
     const sellers = await db.Seller.find().lean()
+    boxes.forEach(box => {
+      if (box.endDate) {
+      }
+    })
+    for (let i = 0; i < boxes.length; i++) {
+      const box = boxes[i];
+
+      if (box.endDate) {
+        box.status = "Box Returned"
+      } else {
+        box.status = "Box Out"
+      }
+      boxes[i] = box
+    }
+
     return res.render("boxes/index", { boxes, sellers, title: "Boxes" })
   } catch (error) {
     console.log(error)
@@ -24,7 +39,7 @@ router.post('/', checkAuth, async (req, res) => {
     let {
       sellerId, startDate, boxType, amount
     } = req.body;
-    if (!exists([sellerId, startDate, boxType, amount])) {
+    if (!exists(sellerId, startDate, boxType, amount)) {
       req.flash("error", "Ensure all fields are correct")
       return res.redirect("/boxes")
     }
@@ -59,7 +74,7 @@ router.post('/', checkAuth, async (req, res) => {
 router.put('/:id', checkAuth, async (req, res) => {
   try {
     let {
-      sellerId, startDate, boxType, amount
+      sellerId, startDate, boxType, amount, endDate
     } = req.body;
 
     if (!exists(sellerId, startDate, boxType, amount)) {
@@ -68,6 +83,7 @@ router.put('/:id', checkAuth, async (req, res) => {
     }
 
     startDate = new Date(startDate)
+    endDate = new Date(endDate)
     let box = await db.Box.findById(req.params.id)
 
 
@@ -77,6 +93,7 @@ router.put('/:id', checkAuth, async (req, res) => {
           startDate,
           boxType,
           amount,
+          endDate,
           seller: sellerId
         }
       })
