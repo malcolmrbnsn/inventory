@@ -8,8 +8,8 @@ const checkAuth = require("../helpers/auth");
 router.get("/", checkAuth, async (req, res) => {
     try {
         let shipments = await db.Shipment.find().lean()
-        return res.render("shipments/index", { shipments, title: "Shipments" })
 
+        return res.render("shipments/index", { shipments, title: "Shipments" })
     } catch (error) {
     console.log(error)
         req.flash("error", "An error occured.")
@@ -24,11 +24,14 @@ router.post("/", checkAuth, async (req, res) => {
             ordered,
             cost,
             goodsRecieved,
-            paymentSent
+            paymentSent,
+            boxType,
+            addBoxes
         } = req.body;
 
         goodsRecieved = goodsRecieved === 'on'
         paymentSent = paymentSent === 'on'
+        addBoxes = addBoxes === 'on'
 
         if (!exists(quantity, cost, ordered)) {
             req.flash("error", "Ensure all fields are correct")
@@ -39,6 +42,15 @@ router.post("/", checkAuth, async (req, res) => {
         // Add 28 days to the date entered
         // FYI: 28 days is the account period for cadbury fundraising accounts
         let dueDate = new Date(ordered + (28 * 24 * 60 * 60 * 1000)) // this doesnt work!
+
+        if (addBoxes) {
+        let boxes = []
+        for (let index = 0; index < quantity; index++) {
+            boxes.push({boxType, amount: 60})
+        }
+        db.Box.insertMany(boxes)
+        }
+
 
         shipment = new db.Shipment({
             quantity,

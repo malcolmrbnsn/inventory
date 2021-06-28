@@ -12,6 +12,10 @@ const SellerSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  password: {
+    type: String,
+    required: true
+  },
   boxes: [
     {
       type: mongoose.Schema.Types.ObjectId,

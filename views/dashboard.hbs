@@ -1,1 +1,50 @@
-<h1>boxes!!!!!</h1>
+<h1>Statistics</h1>
+ <p>boxes:</p>
+<ul>
+<li>unassigned: {{stats.unassigned}}</li>
+<li>out:{{stats.out}}</li>
+<li>sold: {{stats.sold}}</li>
+</ul>
+<canvas id="myChart" width="300" height="300"></canvas>
+<script>
+  var ctx = 'myChart';
+  var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Unassigned', 'Out', 'Sold'],
+        datasets: [{
+            label: 'Boxes',
+            data: [{{stats.unassigned}}, {{stats.out}}, {{stats.sold}}],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        responsive: false
+    }
+});
+</script>
+<hr>
+  Boxes unassigned
+  Boxes out
+  Boxes sold
+  Boxes sold this week
+  Average days to sell per seller
+  Average days to sell per box type
+  Total earned
+  Total earned this week
+  Days until the shipment payment is due.

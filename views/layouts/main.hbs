@@ -7,16 +7,16 @@
     <link rel="stylesheet" href="/lib/semantic-ui.css">
     <script src="/lib/jquery.js"></script>
     <script src="/lib/semantic-ui.js"></script>
+    <script src="/lib/charts.js"></script>
+    {{!-- <script src="/lib/tables.js"></script> --}}
     <style>
         /* container spacing for navbar */
-
         .container.space {
             margin-top: 10em;
             margin-bottom: 3em;
         }
 
         /* delete form button */
-
         .delete {
             display: inline;
         }
@@ -30,11 +30,14 @@
         {{{body}}}
     </div>
     <script>
-        $('.ui.checkbox')
-            .checkbox();
-        $('select.dropdown')
-            .dropdown()
-            ;
+        window.addEventListener('load', (event) => {
+            {{!-- $('table').tablesort(); --}}
+            $('.ui.checkbox')
+                .checkbox();
+            $('select.dropdown')
+                .dropdown();
+        });
+
     </script>
 </body>
 

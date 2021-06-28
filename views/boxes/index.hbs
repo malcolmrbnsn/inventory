@@ -1,14 +1,14 @@
 <h1>Boxes</h1>
 <button class="ui button" onclick="$('#modal_addBox').modal('show');">New Box</button>
-
 <table class="ui celled table">
     <thead>
         <tr>
-            <th class=" wide">Box Type</th>
-            <th class=" wide">Seller</th>
-            <th class=" wide">Status</th>
-            <th class=" wide">Amount</th>
-            <th>Days Out</th>
+            <th class="">Box Type</th>
+            <th class="">Seller</th>
+            <th class="">Start Date</th>
+            <th class="">End Date</th>
+            <th class="">Days to Sell</th>
+            <th class="">Amount</th>
             <th class="three wide">Options</th>
         </tr>
     </thead>
@@ -17,9 +17,10 @@
         <tr>
             <td>{{this.boxType}}</td>
             <td>{{this.seller.name}}</td>
-            <td>{{this.status}}</td>
+            <td>{{displayDate this.startDate}}</td>
+            <td>{{displayDate this.endDate}}</td>
+            <td>{{this.daysToSell}}</td>
             <td>{{this.amount}}</td>
-            <td>{{this}}</td>
 
             <td>
                 <button onclick="$('#modal_{{this._id}}').modal('show');" class="ui yellow button">Edit</button>
@@ -35,33 +36,34 @@
     <div class="header">Add Box</div>
     <div class="content">
         <form action="/boxes" method="POST" id="form_addBox" class="ui form">
-        <div class="fields">
-            <div class="field">
-                <label>startdate</label>
-                <input type="date" name="startDate" id="name">
-            </div>
-            <div class="field">
-                <label>boxType</label>
-                <select class="ui dropdown" name="boxType">
-                    <option value="Freddos">Freddos</option>
-                    <option value="Mixed">Mixed</option>
-                </select>
-            </div>
-            <div class="field">
-                <label>Seller</label>
-                <select class="ui dropdown" name="sellerId">
-                    {{#each sellers}}
-                    <option value={{this._id}}>{{this.name}}</option>
-                    {{/each}}
-                </select>
-            </div>
-            <div class="field">
-                <label>amount</label>
-                <div class="ui labeled input">
-                    <label class="ui label" for="cost">$</label>
-                    <input value="60" type="number" name="amount">
+            <div class="fields">
+                <div class="field">
+                    <label>Start Date</label>
+                    <input type="date" name="startDate" id="name">
                 </div>
-            </div>
+                <div class="field">
+                    <label>Box Type</label>
+                    <select class="ui dropdown" name="boxType">
+                        <option value="Freddos">Freddos</option>
+                        <option value="Mixed">Mixed</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Seller</label>
+                    <select class="ui dropdown" name="sellerId">
+                        <option value="-">-</option>
+                        {{#each sellers}}
+                        <option value={{this._id}}>{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Amount</label>
+                    <div class="ui labeled input">
+                        <label class="ui label" for="cost">$</label>
+                        <input value="60" type="number" name="amount">
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -72,24 +74,23 @@
 
 {{#each boxes}}
 <div id="modal_{{this._id}}" class="ui modal">
-    <div class="header">Add Box</div>
+    <div class="header">Edit Box</div>
     <div class="content">
         <form action="/boxes/{{this._id}}?_method=PUT" method="POST" id="form_{{this._id}}" class="ui form">
-        <div class="fields">
             <div class="field">
-                <label>End Date</label>
+                <label>Start Date</label>
                 <input type="date" value="{{formatDate this.startDate}}" name="startDate" id="name">
             </div>
             <div class="field">
                 <label>End Date</label>
                 {{#if this.endDate}}
-                <input type="date" value="{{formatDate this.startDate}}" name="startDate" id="name">
+                <input type="date" value="{{formatDate this.startDate}}" name="endDate" id="name">
                 {{else}}
                 <input type="date" value="" name="endDate" id="name">
                 {{/if}}
             </div>
             <div class="field">
-                <label>boxType</label>
+                <label>Box Type</label>
                 <select value="{{this.boxType}}" class="ui dropdown" name="boxType">
                     <option value="Freddos">Freddos</option>
                     <option value="Mixed">Mixed</option>
@@ -98,23 +99,24 @@
             <div class="field">
                 <label>Seller</label>
                 <select class="ui dropdown" name="sellerId">
+                        <option value="-">-</option>
                     {{#each ../sellers}}
-                    <option {{#if (idMatches this._id ../seller._id)}}selected{{/if}} value={{this._id}}>{{this.name}}</option>
+                    <option {{#if (idMatches this._id ../seller._id)}}selected{{/if}} value={{this._id}}>{{this.name}}
+                    </option>
                     {{/each}}
                 </select>
             </div>
             <div class="field">
-                <label>amount</label>
+                <label>Amount</label>
                 <div class="ui labeled input">
                     <label class="ui label" for="cost">$</label>
                     <input value="{{this.amount}}" type="number" name="amount">
                 </div>
             </div>
-            </div>
         </form>
     </div>
     <div class="actions">
-        <button class="ui right positive button" form="form_{{this._id}}" type="submit">Add Box</button>
+        <button class="ui right positive button" form="form_{{this._id}}" type="submit">Submit</button>
     </div>
 </div>
 {{/each}}
