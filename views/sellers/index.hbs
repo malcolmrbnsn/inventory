@@ -1,5 +1,7 @@
-<h1>Sellers</h1>
-<button class="ui button" onclick="$('#modal_addSeller').modal('show');">New Seller</button>
+<h1>
+    Sellers
+    <button class="ui right floated green button" onclick="$('#modal_addSeller').modal('show');">New Seller</button>
+</h1>
 
 <table class="ui celled table">
     <thead>
@@ -18,11 +20,11 @@
             <td>{{this.boxesSold}}</td>
             <td>{{this.boxesOut}}</td>
             <td>{{this.email}}</td>
-        <td>
-        <button onclick="$('#modal_{{this._id}}').modal('show');" class="ui yellow button">Edit</button>
+            <td>
+                <button onclick="$('#modal_{{this._id}}').modal('show');" class="ui yellow button">Edit</button>
                 <button form="delete_{{this._id}}" class="ui red button" type="submit">Delete</button>
-            <form action="/sellers/{{this._id}}?_method=DELETE" id="delete_{{this._id}}" method="post"></form>
-        </td>
+                <form action="/sellers/{{this._id}}?_method=DELETE" id="delete_{{this._id}}" method="post"></form>
+            </td>
         </tr>
         {{/each}}
     </tbody>
@@ -39,10 +41,6 @@
             <div class="field">
                 <label>Email</label>
                 <input type="text" name="email" id="email">
-            </div>
-            <div class="field">
-                <label>Password</label>
-                <input type="password" name="password" id="password">
             </div>
         </form>
     </div>

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 // Mongoose setup
 mongoose.Promise = global.Promise
-const databaseURI = process.env.DB_URI || 'mongodb://localhost/inventory'
+const databaseURI = process.env.MONGO_URI || 'mongodb://localhost/inventory'
 
 mongoose.connect(databaseURI, {
   useNewUrlParser: true,

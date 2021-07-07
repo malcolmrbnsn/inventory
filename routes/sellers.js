@@ -33,7 +33,6 @@ router.post('/', checkAuth, async (req, res, next) => {
     seller = new db.Seller({
       name: data.name,
       email: data.email,
-      password: data.password,
       boxes: []
     })
     await seller.save()
@@ -48,10 +47,10 @@ router.post('/', checkAuth, async (req, res, next) => {
 
 router.put('/:id', checkAuth, async (req, res, next) => {
   try {
-    let { name, email, password } = req.body;
+    let { name, email } = req.body;
 
     await db.Seller.findByIdAndUpdate(req.params.id, {
-        name, email, password
+        name, email
     })
 
     req.flash("success", "Seller updated")

@@ -3,11 +3,6 @@ const router = express.Router()
 const db = require('../models')
 const { body, validationResult } = require('express-validator');
 
-/**
- * /signup routes
- * GET: renders the form
- * POST: signs up the user
- */
 router.get('/signup', async (req, res) => {
   res.render('users/signup',
     {

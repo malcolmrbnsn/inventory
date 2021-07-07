@@ -100,24 +100,25 @@ router.put('/:id', checkAuth, async (req, res) => {
       box.endDate = new Date(endDate)
     }
 
-    if (box.seller !== sellerId && sellerId !== "-") {
-      console.log(sellerId)
-      if (box.seller) {
-        const oldSeller = await db.Seller.findById(box.seller);
-        await oldSeller.boxes.remove(this._id)
-        await oldSeller.save()
-      }
-
-
-      const newSeller = await db.Seller.findById(sellerId);
-      if (newSeller) {
-      box.seller = sellerId
-      await newSeller.boxes.push(box)
-      await newSeller.save()
-      }
+    //if there was a seller assigned before remove them
+    if (box.seller) {
+      const oldSeller = await db.Seller.findById(box.seller);
+      await oldSeller.boxes.remove(box._id)
+      await oldSeller.save()
     }
 
-    if (sellerId === "-") {
+    // if there is a seller assigned
+    if (sellerId !== "-") {
+
+      // add the new seller if we find it
+      const newSeller = await db.Seller.findById(sellerId);
+      if (newSeller) {
+        box.seller = sellerId
+        await newSeller.boxes.push(box)
+        await newSeller.save()
+      }
+
+    } else {
       box.seller = undefined;
     }
 
@@ -134,9 +135,15 @@ router.put('/:id', checkAuth, async (req, res) => {
 })
 
 router.delete("/:id", checkAuth, async (req, res) => {
-  await db.Box.findOneAndDelete(req.params.id)
-  req.flash("success", "Box deleted")
-  return res.redirect("/boxes")
+  try {
+    await db.Box.findOneAndDelete(req.params.id)
+    req.flash("success", "Box deleted")
+    return res.redirect("/boxes")
+  } catch (error) {
+    console.log(error)
+    req.flash("error", "An error occured")
+    return res.redirect("/boxes")
+  }
 })
 
 module.exports = router

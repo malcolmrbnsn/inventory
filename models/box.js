@@ -31,7 +31,7 @@ const BoxSchema = new mongoose.Schema({
 
 BoxSchema.pre('remove', async function (next) {
   try {
-    const seller = await Seller.findById(this.seller.id)
+    const seller = await Seller.findById(this.seller)
     await seller.boxes.remove(this._id)
     await seller.save()
 

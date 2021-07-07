@@ -21,16 +21,31 @@ router.get('/dashboard', checkAuth, async function (req, res) {
   Total earned this week
   Days until the shipment payment is due.
   */
-  let stats = {unassigned: 0, out: 0, sold: 0};
-  stats.unassigned = await db.Box.countDocuments({seller: {$exists: false}});
-  stats.out = await db.Box.countDocuments({startDate: {$exists: true}});
-  stats.sold = await db.Box.countDocuments({endDate: {$exists: true}});
-  console.log(stats)
+  let sellersDB = await db.Seller.find().populate("boxes").lean()
+  let boxesDB = await db.Box.find({})
+
+  let boxes = {
+    unassigned: await db.Box.countDocuments({seller: {$exists: false}}),
+     out: await db.Box.countDocuments({startDate: {$exists: true}}),
+      sold: await db.Box.countDocuments({endDate: {$exists: true}})
+    };
+
+
+    let sellers = []
+  sellersDB.forEach((seller, i) => {
+    sellers[i] = {
+      name: seller.name,
+      out: db.Box.countDocuments({seller: seller._id, startDate: {$exists: true}}) - db.Box.countDocuments({seller: seller._id, startDate: {$exists: false}}),
+      sold: db.Box.countDocuments({seller: seller._id, endDate: {$exists: true}})
+    }
+  });
+
 
   res.render('dashboard',
     {
       title: "Dashboard",
-      stats
+      boxes,
+      sellers
     })
 })
 
