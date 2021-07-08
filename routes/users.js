@@ -16,16 +16,24 @@ router.get('/signup', async (req, res) => {
 })
 
 router.post('/signup',
-  body('email').isEmail().custom(value => {
-    return db.User.findOne({ email: value }).then(user => {
+  body('email').isEmail().custom(async value => {
+    try {
+    return await db.User.findOne({ email: value }).then(user => {
       if (user) {
         return Promise.reject('E-mail already in use');
       }
     });
-  }),
+    } catch(error) {
+      console.log(error)
+      req.flash("error", "An error ocurred")
+      return res.render('users/signup', {
+        title: "Sign Up"
+      })
+      
+    }}),
   body('password', 'Password needs to be at least 5 characters').isLength({ min: 5 }),
   body('code', "Signup code is incorrect").equals(process.env.SIGNUP_CODE),
-  async (req, res, next) => {
+  async (req, res) => {
     try {
       // throw an error if the form was not validated successfully
       validationResult(req).throw();
@@ -43,6 +51,7 @@ router.post('/signup',
       req.flash("Success", "Logged in as " + user.email)
       return res.redirect("/dashboard")
     } catch (error) {
+      console.log(error)
       req.flash("error", "An error ocurred")
       return res.render('users/signup', {
         title: "Sign Up"
@@ -61,7 +70,7 @@ router.get('/login', async (req, res) => {
   })
 })
 
-router.post('/login', async (req, res, next) => {
+router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body
     const user = await db.User.findOne({
