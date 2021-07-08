@@ -3,11 +3,6 @@ const router = express.Router()
 const db = require('../models')
 const { body, validationResult } = require('express-validator');
 
-/**
- * /signup routes
- * GET: renders the form
- * POST: signs up the user
- */
 router.get('/signup', async (req, res) => {
   res.render('users/signup',
     {
@@ -49,13 +44,11 @@ router.post('/signup',
         loggedIn: true
       }
       req.flash("Success", "Logged in as " + user.email)
-      return res.redirect("/dashboard")
+      return res.redirect("/boxes")
     } catch (error) {
       console.log(error)
       req.flash("error", "An error ocurred")
-      return res.render('users/signup', {
-        title: "Sign Up"
-      })
+      return res.redirect("/signup")
     }
   })
 
@@ -77,17 +70,21 @@ router.post('/login', async (req, res) => {
       email,
       password
     })
+
     if (!user) {
       throw new Error('E-mail address or password incorrect');
     }
+
     req.session = {
       user,
       loggedIn: true
     }
+
     req.flash("Success", "Logged in as " + user.email)
-    return res.redirect("/dashboard")
+    return res.redirect("/boxes")
 
   } catch (error) {
+    console.log(error)
     req.flash("error", "An error occured")
     return res.redirect("/login")
   }

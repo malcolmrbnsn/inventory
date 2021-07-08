@@ -44,13 +44,18 @@ app.use(function(req, res, next){
   next();
 });
 
+// FEATURES: MESSAGES
 
 // Enable HTML templating
 app.engine('hbs', exphbs({
   layoutsDir: __dirname + '/views/layouts',
   extname: 'hbs',
   helpers: {
-    displayDate: val => moment(val).format("MMM Do YY"),
+    displayDate: val => {
+      if (val) {
+       return moment(val).format("Do MMMM YY")
+      }
+    },
     formatDate: val => moment(val).format("YYYY-MM-DD"),
     count: val => val.length,
     idMatches: (val1, val2) => val1.equals(val2)

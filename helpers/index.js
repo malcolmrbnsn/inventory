@@ -1,10 +1,6 @@
 
-/**
- * Validates a form when passed an array of fields
- * @param {[string]} fields 
- * @returns {boolean} Form validity
- */
-function validateFields(fields) {
+function exists() {
+    let fields = [...arguments];
     let vals = []
     fields.forEach(i => {
         if (typeof i === "string" && i.length > 0) {
@@ -16,7 +12,4 @@ function validateFields(fields) {
     return !vals.includes(false)
 }
 
-
-
-
-module.exports = validateFields
+module.exports = {exists}

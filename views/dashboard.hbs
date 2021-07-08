@@ -1,1 +1,69 @@
-<h1>dashboard!!!!!</h1>
+<h1>Dashboard</h1>
+<div class="ui grid">
+    <div class="two column row">
+        <div class="column">
+            <h3>Boxes</h3>
+            <div class="ui statistics">
+                <ui class="statistic">
+                    <div class="value">{{boxes.out}}</div>
+                    <div class="label">Boxes Out</div>
+                </ui>
+                <ui class="statistic">
+                    <div class="value">{{boxes.sold}}</div>
+                    <div class="label">Boxes sold</div>
+                </ui>
+                <ui class="statistic">
+                    <div class="value">{{boxes.unassigned}}</div>
+                    <div class="label">Boxes unassigned</div>
+                </ui>
+            </div>
+            <canvas id="boxStatus" width="300" height="300"></canvas>
+            <script>
+                var ctx = 'boxStatus';
+                var myChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Unassigned', 'Out', 'Sold'],
+                        datasets: [{
+                            label: 'Boxes',
+                            data: [{{ boxes.unassigned }}, {{ boxes.out }}, {{ boxes.sold }}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)'
+                ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                        borderWidth: 1
+        }]
+    },
+                options: {
+                    responsive: false
+                }
+});
+            </script>
+        </div>
+        <div class="column">
+            <h3>Sellers</h3>
+            <table class="ui table">
+                <thead>
+                    <tr>
+                        <th>Seller</th>
+                        <th>Boxes Out</th>
+                        <th>Boxes Sold</th>
+                    </tr>
+                </thead>
+                {{#each sellers}}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{this.out}}</td>
+                    <td>{{this.sold}}</td>
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,8 @@
-<h1>Shipments</h1>
+<h1> 
+    Shipments
+<button class="ui right floated green button" onclick="$('#modal_addShipment').modal('show');">Add Shipment</button>
+</h1>
 
-<button class="ui button" onclick="$('#modal_addShipment').modal('show');">Add Shipment</button>
 <table class="ui celled table">
     <thead>
         <tr>
@@ -22,8 +24,8 @@
         <td>{{#if this.goodsRecieved}}Yes{{else}}No{{/if}}</td>
         <td>{{#if this.paymentSent}}Yes{{else}}No{{/if}}</td>
         <td>
-        <button onclick="$('#modal_{{this._id}}').modal('show');" class="ui yellow button">Edit</button>
-                <button form="delete_{{this._id}}" class="ui red button" type="submit">Delete</button>
+            <button onclick="$('#modal_{{this._id}}').modal('show');" class="ui yellow button">Edit</button>
+            <button form="delete_{{this._id}}" class="ui red button" type="submit">Delete</button>
             <form action="/shipments/{{this._id}}?_method=DELETE" id="delete_{{this._id}}" method="post"></form>
         </td>
     </tr>
@@ -34,10 +36,17 @@
     <div class="header">Add Shipment</div>
     <div class="content">
         <form action="/shipments" id="form_addShipment" method="POST" class="ui form">
-            <div class="inline fields">
+            <div class="fields">
                 <div class="field">
                     <label>Quantity</label>
                     <input type="number" name="quantity">
+                </div>
+                <div class="field">
+                    <label>boxType</label>
+                    <select class="ui dropdown" name="boxType">
+                        <option value="Freddos">Freddos</option>
+                        <option value="Mixed">Mixed</option>
+                    </select>
                 </div>
                 <div class="field">
                     <label>Total Cost</label>
@@ -60,6 +69,12 @@
                     <label>Payment Sent</label>
                     <div class="ui checkbox">
                         <input type="checkbox" class="hidden" name="paymentSent"> $
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Add Boxes?</label>
+                    <div class="ui checkbox">
+                        <input type="checkbox" class="hidden" name="addBoxes">
                     </div>
                 </div>
             </div>

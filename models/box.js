@@ -3,9 +3,7 @@ const Seller = require('./seller')
 
 const BoxSchema = new mongoose.Schema({
   startDate: {
-    type: Date,
-    required: true,
-    default: Date.now
+    type: Date
   },
   endDate: {
     type: Date
@@ -17,18 +15,23 @@ const BoxSchema = new mongoose.Schema({
   seller: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Seller',
-    required: true
+    required: false
   },
   amount: {
     type: String,
     required: true,
     default: 60
+  },
+  dateAdded: {
+    type: Date,
+    default: Date.now(),
+    required: true
   }
 })
 
 BoxSchema.pre('remove', async function (next) {
   try {
-    const seller = await Seller.findById(this.seller.id)
+    const seller = await Seller.findById(this.seller)
     await seller.boxes.remove(this._id)
     await seller.save()
 

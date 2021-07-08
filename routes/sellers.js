@@ -7,12 +7,22 @@ const checkAuth = require("../helpers/auth");
 // Base route: /sellers
 router.get('/', checkAuth, async (req, res, next) => {
   try {
-    const sellers = await db.Seller.find().lean()
+    let sellers = await db.Seller.find().populate("boxes").lean()
+    sellers = sellers.map(seller => {
+      let start = seller.boxes.filter(box => box.startDate).length
+      let end = seller.boxes.filter(box => box.endDate).length
+      return {
+        boxesOut: (start - end),
+        boxesSold: end,
+        ...seller
+      }
+    })
     return res.render("sellers/index", {
       sellers: sellers,
       title: "Sellers"
     })
   } catch (error) {
+    console.log(error)
     next(error)
   }
 })
@@ -29,6 +39,7 @@ router.post('/', checkAuth, async (req, res, next) => {
     req.flash("success", "Seller added")
     return res.redirect("/sellers")
   } catch (error) {
+    console.log(error)
     req.flash("error", "An error occured.")
     next(error)
   }
@@ -36,26 +47,25 @@ router.post('/', checkAuth, async (req, res, next) => {
 
 router.put('/:id', checkAuth, async (req, res, next) => {
   try {
-    let {name, email} = req.body;
+    let { name, email } = req.body;
 
     await db.Seller.findByIdAndUpdate(req.params.id, {
-      $set: {
         name, email
-      }
     })
 
     req.flash("success", "Seller updated")
     return res.redirect("/sellers")
   } catch (error) {
+    console.log(error)
     req.flash("error", "An error occured.")
     return res.redirect("/sellers")
   }
 })
 
 router.delete("/:id", checkAuth, async (req, res) => {
-    await db.Seller.findOneAndDelete(req.params.id)
-    req.flash("success", "Seller deleted")
-    return res.redirect("/sellers")
+  await db.Seller.findOneAndDelete(req.params.id)
+  req.flash("success", "Seller deleted")
+  return res.redirect("/sellers")
 })
 
 module.exports = router

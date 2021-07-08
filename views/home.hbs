@@ -12,7 +12,7 @@
 
 <body class="pushable">
     <div class="ui sidebar inverted vertical menu">
-        <a href="/dashboard" class="ui item"><i class="home icon"></i>Home</a>
+        <a href="/boxes" class="ui item"><i class="home icon"></i>Home</a>
         {{#if session.loggedIn}}
         <a class="item" href="/logout">Logout</a>
         {{else}}
@@ -31,7 +31,7 @@
                     </h1>
                     <div class="right item desktop-only">
                         <div class="ui massive secondary inverted pointing menu">
-                            <a href="/dashboard" class="item">Home</a>
+                            <a href="/boxes" class="item">Home</a>
                             {{#if session.loggedIn}}
                                     <a class="item" href="/logout">Logout</a>
                                     {{else}}
@@ -65,7 +65,7 @@
                 <h1 class="ui inverted header">
                     Welcome to Inventory
                 </h1>
-                <a href="/dashboard" class="ui massive white button">
+                <a href="/boxes" class="ui massive white button">
                     Get started
                 </a>
             </div>
