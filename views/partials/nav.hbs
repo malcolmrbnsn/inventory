@@ -1,15 +1,17 @@
 <div class="ui secondary menu">
     <a class="header item" href="/">Inventory</a>
-    <a class="item" href="/dashboard">Dashboard</a>
-    <a class="item" href="/boxes">Boxes</a>
-    <a class="item" href="/sellers">Sellers</a>
-    <a class="item" href="/shipments">Shipments</a>
+    {{#if session.loggedIn}}
+      <a class="item" href="/dashboard">Dashboard</a>
+      <a class="item" href="/boxes">Boxes</a>
+      <a class="item" href="/sellers">Sellers</a>
+      <a class="item" href="/shipments">Shipments</a>
+    {{/if}}
     <div class="right menu">
         {{#if session.loggedIn}}
-        <a class="item" href="/signout">Sign Out</a>
+          <a class="item" href="/signout">Sign Out</a>
         {{else}}
-        <a class="item" href="/login">Login</a>
-        <a class="item" href="/signup">Sign Up</a>
+          <a class="item" href="/login">Login</a>
+          <a class="item" href="/signup">Sign Up</a>
         {{/if}}
     </div>
 </div>

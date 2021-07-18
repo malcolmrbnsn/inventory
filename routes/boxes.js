@@ -4,7 +4,6 @@ const db = require('../models')
 
 const checkAuth = require("../helpers/auth");
 const { exists } = require("../helpers");
-const { sendMail } = require("../helpers/mail")
 
 // Base route: /api/boxes
 router.get('/', checkAuth, async (req, res, next) => {
