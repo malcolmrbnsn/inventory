@@ -38,10 +38,11 @@ router.post("/", checkAuth, async (req, res) => {
             return res.redirect("/shipments")
         }
 
-        ordered = new Date(ordered)
+        dateOrdered = new Date(ordered)
         // Add 28 days to the date entered
         // FYI: 28 days is the account period for cadbury fundraising accounts
-        let dueDate = new Date(ordered + (28 * 24 * 60 * 60 * 1000)) // this doesnt work!
+        let dateDue = new Date(ordered);
+        dateDue.setDate(dateDue.getDate() + 28)
 
         if (addBoxes) {
         let boxes = []
@@ -54,11 +55,11 @@ router.post("/", checkAuth, async (req, res) => {
 
         shipment = new db.Shipment({
             quantity,
-            ordered,
+            ordered: dateOrdered,
             cost,
             goodsRecieved,
             paymentSent,
-            dueDate
+            dueDate: dateDue
         })
 
         await shipment.save()
@@ -92,19 +93,19 @@ router.put("/:id", checkAuth, async (req, res) => {
             return res.redirect("/shipments")
         }
 
-        ordered = new Date(ordered)
+        dateOrdered = new Date(ordered)
         // Add 28 days to the date entered
-        // FYI: 28 days is the account period for cadbury fundraising accounts
-        let dueDate = new Date(ordered + (28 * 24 * 60 * 60 * 1000)) // this doesnt work!
+        let dateDue = new Date(ordered);
+        dateDue.setDate(dateDue.getDate() + 28)
 
         await db.Shipment.findOneAndUpdate(id, {
             $set: {
                 quantity,
-                ordered,
+                ordered: dateOrdered,
                 cost,
                 goodsRecieved,
                 paymentSent,
-                dueDate
+                dueDate: dateDue
             }
         })
 
