@@ -1,6 +1,6 @@
 version: '3'
 services:
-  inventory_backend:
+  backend:
     container_name: "inventory_backend"
     build: .
     restart: always
@@ -9,13 +9,13 @@ services:
     networks:
       - backend
     environment:
-      - DB_URI="mongodb://inventory_mongodb/inventory"
+      - MONGO_URI=mongodb://mongodb/inventory
       - PORT=3000
       - IP=0.0.0.0
       - SIGNUP_CODE=1234
-      - COOKIE_SECRET="goose"
+      - COOKIE_SECRET=goose
       - TZ=Australia/Sydney
-  inventory_mongodb:
+  mongodb:
     image: mongo
     container_name: "inventory_mongodb"
     networks:
