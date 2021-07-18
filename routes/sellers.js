@@ -3,6 +3,7 @@ const router = express.Router()
 const db = require('../models')
 
 const checkAuth = require("../helpers/auth");
+const seller = require('../models/seller');
 
 // Base route: /sellers
 router.get('/', checkAuth, async (req, res, next) => {
@@ -30,7 +31,7 @@ router.get('/', checkAuth, async (req, res, next) => {
 router.post('/', checkAuth, async (req, res, next) => {
   try {
     const data = req.body
-    seller = new db.Seller({
+    let seller = new db.Seller({
       name: data.name,
       email: data.email,
       boxes: []
@@ -63,7 +64,19 @@ router.put('/:id', checkAuth, async (req, res, next) => {
 })
 
 router.delete("/:id", checkAuth, async (req, res) => {
-  await db.Seller.findOneAndDelete(req.params.id)
+  let seller = await db.Seller.findOne({_id: req.params.id})
+  console.log(seller.boxes)
+  if (seller.boxes) {
+    await seller.boxes.forEach(async id => {
+      let box = await db.Box.findOne(id);
+      if (box) {
+        box.seller = undefined;
+        await box.save();
+      }
+    })
+  }
+  await seller.remove();
+  
   req.flash("success", "Seller deleted")
   return res.redirect("/sellers")
 })

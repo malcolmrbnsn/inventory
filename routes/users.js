@@ -12,20 +12,12 @@ router.get('/signup', async (req, res) => {
 
 router.post('/signup',
   body('email').isEmail().custom(async value => {
-    try {
     return await db.User.findOne({ email: value }).then(user => {
       if (user) {
         return Promise.reject('E-mail already in use');
       }
-    });
-    } catch(error) {
-      console.log(error)
-      req.flash("error", "An error ocurred")
-      return res.render('users/signup', {
-        title: "Sign Up"
-      })
-      
-    }}),
+    })
+  }),
   body('password', 'Password needs to be at least 5 characters').isLength({ min: 5 }),
   body('code', "Signup code is incorrect").equals(process.env.SIGNUP_CODE),
   async (req, res) => {
@@ -50,7 +42,7 @@ router.post('/signup',
       req.flash("error", "An error ocurred")
       return res.redirect("/signup")
     }
-  })
+  });
 
 /**
  * /login routes

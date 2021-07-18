@@ -24,24 +24,31 @@ router.get('/dashboard', checkAuth, async function (req, res) {
   let sellersDB = await db.Seller.find().populate("boxes").lean()
   let boxesDB = await db.Box.find({})
 
+  let started = await db.Box.countDocuments({startDate: {$exists: true}});
+  let notStarted = await db.Box.countDocuments({startDate: {$exists: false}});
+  let finished = await db.Box.countDocuments({endDate: {$exists: true}});
+
   let boxes = {
-    unassigned: await db.Box.countDocuments({seller: {$exists: false}}),
-     out: await db.Box.countDocuments({startDate: {$exists: true}}),
-      sold: await db.Box.countDocuments({endDate: {$exists: true}})
-    };
+    unassigned: notStarted,
+    out: started - finished,
+    sold: finished
+  };
 
 
     let sellers = []
-  sellersDB.forEach((seller, i) => {
-    sellers[i] = {
-      name: seller.name,
-      out: db.Box.countDocuments({seller: seller._id, startDate: {$exists: true}}) - db.Box.countDocuments({seller: seller._id, startDate: {$exists: false}}),
-      sold: db.Box.countDocuments({seller: seller._id, endDate: {$exists: true}})
-    }
+    await sellersDB.forEach(async (seller, i) => {
+      let started = await db.Box.countDocuments({seller: seller._id, startDate: {$exists: true}});
+      let finished = await db.Box.countDocuments({seller: seller._id, endDate: {$exists: true}});
+
+      sellers[i] = {
+        name: seller.name,
+        out: started - finished,
+        sold: finished
+      }
   });
 
 
-  res.render('dashboard',
+  return res.render('dashboard',
     {
       title: "Dashboard",
       boxes,

@@ -20,6 +20,8 @@ services:
     container_name: "inventory_mongodb"
     networks:
       - backend
+    ports:
+      - 27017:27017
     volumes:
       - ./mongodb:/data/db
 

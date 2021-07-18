@@ -20,18 +20,4 @@ const SellerSchema = new mongoose.Schema({
   ]
 })
 
-SellerSchema.pre('remove', function (next) {
-  try {
-    if (this.boxes) {
-      this.boxes.forEach(box => {
-        Box.findByIdAndRemove(box)
-      })
-    }
-
-    return next()
-  } catch (err) {
-    return next(err)
-  }
-})
-
 module.exports = mongoose.model('Seller', SellerSchema)
